@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="/main/style.css" />
-    <!-- <script src="/main/script.js" defer></script> -->
+    <script src="/main/script.js" defer></script>
 
 </head>
 
@@ -663,12 +663,12 @@
         </div>
     </nav>
 
-    <pre><%= JSON.stringify(user, null, 2) %></pre>
+    <!-- <pre><%= JSON.stringify(user, null, 2) %></pre> -->
 
     <script>
-        window.currentUser = <% - JSON.stringify(user) %>
-    </script>
-    <script src="/main/script.js" defer></script>
+        window.currentUser = <%- JSON.stringify(user) %>
+    </script> 
+    <!-- <script src="/main/script.js" defer></script>
 
 </body>
 

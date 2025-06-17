@@ -32,7 +32,9 @@ app.use(session({
 }));
 
 // Serve static files for /main
+app.use(express.static(__dirname));
 app.use('/main', express.static(path.join(__dirname, 'views', 'main')));
+app.use('/land', express.static(path.join(__dirname, 'views', 'land')));
 
 // Home page (EJS)
 app.get('/home', async (req, res) => {
@@ -44,11 +46,12 @@ app.get('/home', async (req, res) => {
 
 // Login/signup page (HTML)
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', '/land/index.js'), function (err) {
+    res.render('land/index', {}, function (err, html) {
         if (err) {
-            console.error('Error sending lg.html:', err);
+            console.error('Error rendering index.ejs:', err);
             res.status(err.status || 500).end();
         } else {
+            res.send(html);
             console.log('Login page rendered successfully');
         }
     });
