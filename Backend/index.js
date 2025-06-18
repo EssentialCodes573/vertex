@@ -26,9 +26,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(session({
-    secret: '11259375',
+    secret: process.env.JWT_SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { secure: false }
 }));
 
 // Serve static files for /main
@@ -65,8 +66,13 @@ app.get('/home', async (req, res) => {
 });
 
 // Login/signup page (HTML)
-app.get('/', (req, res) => {
-    res.render('land/index', {}, function (err, html) {
+app.get('/login', (req, res) => {
+    if (req.session.user) {
+        // User is already logged in, redirect to home page
+        return res.redirect('/main/vertex');
+    }
+    // Not logged in, show login/signup page
+    res.render('land/index', { user: null }, function (err, html) {
         if (err) {
             console.error('Error rendering index.ejs:', err);
             res.status(err.status || 500).end();
@@ -76,6 +82,8 @@ app.get('/', (req, res) => {
         }
     });
 });
+
+
 
 app.post('/api/deposit-request', async (req, res) => {
     const { accountName, bankName } = req.body;
@@ -113,17 +121,17 @@ app.post('/api/deposit-request', async (req, res) => {
 
 
 app.post('/wema/webhook', async (req, res) => {
-  const payload = req.body;
+    const payload = req.body;
 
-  console.log('📨 Incoming Wema Webhook:', JSON.stringify(payload, null, 2));
+    console.log('📨 Incoming Wema Webhook:', JSON.stringify(payload, null, 2));
 
-  // Example handling logic:
-  if (payload.transactionType === 'CREDIT') {
-    // You could verify the account, update user's balance, etc.
-    console.log(`💰 Received credit of ₦${payload.amount} from ${payload.senderName}`);
-  }
+    // Example handling logic:
+    if (payload.transactionType === 'CREDIT') {
+        // You could verify the account, update user's balance, etc.
+        console.log(`💰 Received credit of ₦${payload.amount} from ${payload.senderName}`);
+    }
 
-  res.status(200).send('Webhook received');
+    res.status(200).send('Webhook received');
 });
 
 
