@@ -9,6 +9,9 @@ const User = require('./models/users.models');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
 
+dotenv.config(); // Make sure environment variables are loaded
+console.log('JWT_SECRET from .env:', process.env.JWT_SECRET ? 'Loaded' : 'NOT LOADED');
+
 // Route imports
 const purchaseRoutes = require('./routes/purchase.routes');
 const accountsRoutes = require('./routes/accounts.routes');
@@ -24,23 +27,29 @@ app.use(express.urlencoded({ extended: true }));
 // Set EJS as view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(__dirname));
 
 app.use(session({
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    // cookie: { secure: false }
 }));
 
-// Serve static files for /main
-app.use(express.static(__dirname));
+// Serve static files
 app.use('/main', express.static(path.join(__dirname, 'views', 'main')));
 app.use('/land', express.static(path.join(__dirname, 'views', 'land')));
 
+// Redirect root to login
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
+
 // Home page (EJS)
 app.get('/home', async (req, res) => {
+    if (!req.session.username) return res.redirect('/login');
     const user = await User.findOne({ username: req.session.username });
-    if (!user) return res.redirect('/');
+    if (!user) return res.redirect('/login');
 
     // Fetch all purchases for this user, including product info
     const purchases = await Purchase.find({ user: user._id }).populate('product');
@@ -65,11 +74,11 @@ app.get('/home', async (req, res) => {
     console.log('Home page rendered successfully');
 });
 
-// Login/signup page (HTML)
+// Login/signup page (EJS)
 app.get('/login', (req, res) => {
-    if (req.session.user) {
+    if (req.session.username) {
         // User is already logged in, redirect to home page
-        return res.redirect('/main/vertex');
+        return res.redirect('/home');
     }
     // Not logged in, show login/signup page
     res.render('land/index', { user: null }, function (err, html) {
@@ -83,7 +92,46 @@ app.get('/login', (req, res) => {
     });
 });
 
+// Example login POST (add your real logic)
+// app.post('/login', async (req, res) => {
+//     const { username, password } = req.body; // Make sure your form sends a 'password' field
+//     const user = await User.findOne({ username });
 
+//     if (user && (await user.matchPassword(password))) { // Use the matchPassword method
+//         req.session.username = username;
+//         return res.redirect('/home');
+//     } else {
+//         // Handle incorrect username or password
+//         res.redirect('/login?error=invalid_credentials');
+//     }
+// });
+
+app.post('/login', async (req, res) => {
+    const { username } = req.body; // Assuming you're still just using username for login for now
+    console.log('--- POST /login attempt ---');
+    console.log('Received username:', username);
+
+    const user = await User.findOne({ username });
+    if (user) {
+        console.log('User found in DB:', user.username);
+        req.session.username = username;
+        console.log('Session SET: req.session.username =', req.session.username);
+
+        // Crucial: Make sure the session is saved before redirecting
+        req.session.save(err => {
+            if (err) {
+                console.error('Error saving session:', err);
+                return res.status(500).send('Login failed due to session error.');
+            }
+            console.log('Session successfully saved. Redirecting to /home.');
+            return res.redirect('/home');
+        });
+
+    } else {
+        console.log('User NOT found in DB for username:', username);
+        res.redirect('/login?error=invalid'); // Add a query param for better client-side feedback
+    }
+});
 
 app.post('/api/deposit-request', async (req, res) => {
     const { accountName, bankName } = req.body;
@@ -91,7 +139,6 @@ app.post('/api/deposit-request', async (req, res) => {
     try {
         // Prepare your payload as required by the Wema API
         const payload = {
-            // Fill this with the required fields for the API
             accountName,
             bankName,
             // ...other required fields
@@ -103,7 +150,6 @@ app.post('/api/deposit-request', async (req, res) => {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    // Add your API key or authorization here if required
                     'Authorization': 'Bearer 1b085fd1a532429db580e08979e4d183',
                     'Ocp-Apim-Subscription-Key': '14e2b202eec34bc596b278ae5df5a9d4'
                 }
@@ -116,9 +162,6 @@ app.post('/api/deposit-request', async (req, res) => {
         res.status(500).json({ success: false, message: 'Bank API request failed' });
     }
 });
-
-
-
 
 app.post('/wema/webhook', async (req, res) => {
     const payload = req.body;
@@ -134,13 +177,17 @@ app.post('/wema/webhook', async (req, res) => {
     res.status(200).send('Webhook received');
 });
 
-
 // API routes
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/accounts', accountsRoutes);
 app.use('/api/deposits', depositsRoutes);
 app.use('/api/referrals', referralRoutes);
 app.use('/api/auth', authRoutes);
+
+// 404 handler for unknown routes
+app.use((req, res) => {
+    res.status(404).send('404 Not Found');
+});
 
 app.listen(PORT, () => {
     connectDB();
