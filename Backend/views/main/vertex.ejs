@@ -153,10 +153,29 @@
                         <i class="fas fa-headset text-3xl mb-2 text-accent"></i>
                         <span>Support</span>
                     </div>
-                    <div class="icon-box">
-                        <i class="fas fa-history text-3xl mb-2 text-accent"></i>
-                        <span>Transactions</span>
+                   <div class="icon-box" id="transactions-nav">
+  <i class="fas fa-history text-3xl mb-2 text-accent"></i>
+  <span>Transactions</span>
+</div>
+
+<div class="transaction-list mt-4">
+  <% if (transactions && transactions.length > 0) { %>
+    <% transactions.forEach(function(tx) { %>
+      <div class="transaction-item p-2 bg-white shadow rounded mb-2">
+        <strong><%= tx.title %></strong><br>
+        Amount: ₦<%= tx.amount %><br>
+        Date: <%= tx.date %>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <div class="no-transactions text-gray-500">No transactions available.</div>
+  <% } %>
+</div>
+
+    </section>
+</div>
                     </div>
+
                 </section>
 
                 <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
@@ -640,7 +659,7 @@
 
     <div class="fixed bottom-28 right-4 z-50">
         <button class="bg-accent text-primary rounded-full p-4 shadow-lg flex items-center justify-center pulse">
-            <i class="fab fa-telegram-plane text-2xl"></i>
+            <a href="https://t.me/VERTEX_INNOVATIONS"><i class="fab fa-telegram-plane text-2xl"></i></a>
         </button>
     </div>
 
@@ -666,10 +685,9 @@
     <!-- <pre><%= JSON.stringify(user, null, 2) %></pre> -->
 
     <script>
+         window.currentUser = <%- JSON.stringify(user) %>;
         window.currentUser = <%- JSON.stringify(user) %>
     </script> 
-    <!-- <script src="/main/script.js" defer></script>
-
 </body>
 
 </html>

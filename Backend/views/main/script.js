@@ -10,6 +10,74 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    document.getElementById('submit-deposit').addEventListener('click', async function () {
+    const accountName = document.getElementById('account-name-deposit').value;
+    const bankName = document.getElementById('bank-name-deposit').value;
+    // You can add more fields as needed
+
+    try {
+        const res = await fetch('/api/deposit-request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accountName, bankName })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            showToast('Deposit request submitted successfully!');
+        } else {
+            showToast(data.message || 'Deposit request failed', true);
+        }
+    } catch (err) {
+        showToast('Network error', true);
+    }
+});
+
+    function renderTransactions(purchases) {
+    const list = document.getElementById('transactions-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (!purchases || purchases.length === 0) {
+        list.innerHTML = '<p class="text-text-secondary">No transactions yet.</p>';
+        return;
+    }
+
+    purchases.forEach(purchase => {
+        const product = purchase.product || {};
+        const date = new Date(purchase.purchasedAt).toLocaleDateString();
+        const amount = product.price ? product.price * purchase.quantity : 0;
+        list.innerHTML += `
+            <div class="card p-4 flex justify-between items-center">
+                <div>
+                    <div class="font-semibold">${product.name || 'Product'}</div>
+                    <div class="text-sm text-text-secondary">${date}</div>
+                </div>
+                <div class="font-bold text-green-500">
+                    -₦${amount.toLocaleString()}
+                </div>
+            </div>
+        `;
+    });
+}
+
+
+    const transactionsNav = getElement('transactions-nav', false);
+const transactionsSection = getElement('transactions-section', false);
+if (transactionsNav && transactionsSection) {
+    transactionsNav.addEventListener('click', () => {
+        // Hide all main sections
+        Object.values(sections).forEach(section => {
+            if (section) section.classList.add("hidden");
+        });
+        // Show transactions section
+        transactionsSection.classList.remove("hidden");
+        // Render transactions
+        renderTransactions(state.transactions);
+    });
+}
+
+
+
     // Safe element getter
     function getElement(id, required = true) {
         const element = document.getElementById(id);
@@ -66,8 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
         invite: getElement("invite-button")
     };
 
-    // const toast = getElement("toast");
-    // const toastMessage = getElement("toast-message");
 
     // User menu setup
     const userMenuButton = getElement("user-menu-button", false);
@@ -201,6 +267,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     grid.innerHTML = productData.alpha.map(createProductCard).join('');
                 }
             }
+
+            
 
             // Activate default tab
             const stableTab = getElement("stable-products-tab", false);

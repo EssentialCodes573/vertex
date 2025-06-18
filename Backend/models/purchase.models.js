@@ -18,6 +18,10 @@ const purchaseSchema = new mongoose.Schema({
     purchasedAt: {
         type: Date,
         default: Date.now
+    },
+    lastCredited: {
+        type: Date,
+        default: Date.now
     }
 });
 
