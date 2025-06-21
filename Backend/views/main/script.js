@@ -11,42 +11,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.getElementById('submit-deposit').addEventListener('click', async function () {
-    const accountName = document.getElementById('account-name-deposit').value;
-    const bankName = document.getElementById('bank-name-deposit').value;
-    // You can add more fields as needed
+        const accountName = document.getElementById('account-name-deposit').value;
+        const bankName = document.getElementById('bank-name-deposit').value;
+        // You can add more fields as needed
 
-    try {
-        const res = await fetch('/api/deposit-request', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ accountName, bankName })
-        });
-        const data = await res.json();
-        if (res.ok) {
-            showToast('Deposit request submitted successfully!');
-        } else {
-            showToast(data.message || 'Deposit request failed', true);
+        try {
+            const res = await fetch('/api/deposit-request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accountName, bankName })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showToast('Deposit request submitted successfully!');
+            } else {
+                showToast(data.message || 'Deposit request failed', true);
+            }
+        } catch (err) {
+            showToast('Network error', true);
         }
-    } catch (err) {
-        showToast('Network error', true);
-    }
-});
+    });
 
     function renderTransactions(purchases) {
-    const list = document.getElementById('transactions-list');
-    if (!list) return;
-    list.innerHTML = '';
+        const list = document.getElementById('transactions-list');
+        if (!list) return;
+        list.innerHTML = '';
 
-    if (!purchases || purchases.length === 0) {
-        list.innerHTML = '<p class="text-text-secondary">No transactions yet.</p>';
-        return;
-    }
+        if (!purchases || purchases.length === 0) {
+            list.innerHTML = '<p class="text-text-secondary">No transactions yet.</p>';
+            return;
+        }
 
-    purchases.forEach(purchase => {
-        const product = purchase.product || {};
-        const date = new Date(purchase.purchasedAt).toLocaleDateString();
-        const amount = product.price ? product.price * purchase.quantity : 0;
-        list.innerHTML += `
+        purchases.forEach(purchase => {
+            const product = purchase.product || {};
+            const date = new Date(purchase.purchasedAt).toLocaleDateString();
+            const amount = product.price ? product.price * purchase.quantity : 0;
+            list.innerHTML += `
             <div class="card p-4 flex justify-between items-center">
                 <div>
                     <div class="font-semibold">${product.name || 'Product'}</div>
@@ -57,24 +57,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             </div>
         `;
-    });
-}
+        });
+    }
 
 
     const transactionsNav = getElement('transactions-nav', false);
-const transactionsSection = getElement('transactions-section', false);
-if (transactionsNav && transactionsSection) {
-    transactionsNav.addEventListener('click', () => {
-        // Hide all main sections
-        Object.values(sections).forEach(section => {
-            if (section) section.classList.add("hidden");
+    const transactionsSection = getElement('transactions-section', false);
+    if (transactionsNav && transactionsSection) {
+        transactionsNav.addEventListener('click', () => {
+            // Hide all main sections
+            Object.values(sections).forEach(section => {
+                if (section) section.classList.add("hidden");
+            });
+            // Show transactions section
+            transactionsSection.classList.remove("hidden");
+            // Render transactions
+            renderTransactions(state.transactions);
         });
-        // Show transactions section
-        transactionsSection.classList.remove("hidden");
-        // Render transactions
-        renderTransactions(state.transactions);
-    });
-}
+    }
 
 
 
@@ -138,7 +138,7 @@ if (transactionsNav && transactionsSection) {
     // User menu setup
     const userMenuButton = getElement("user-menu-button", false);
     const userMenu = getElement("user-menu", false);
-    
+
     if (userMenuButton && userMenu) {
         userMenuButton.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -268,7 +268,7 @@ if (transactionsNav && transactionsSection) {
                 }
             }
 
-            
+
 
             // Activate default tab
             const stableTab = getElement("stable-products-tab", false);
@@ -322,7 +322,7 @@ if (transactionsNav && transactionsSection) {
             // Back buttons
             const backButtons = [
                 "back-to-dashboard-from-deposit",
-                "back-to-dashboard-from-withdraw", 
+                "back-to-dashboard-from-withdraw",
                 "back-to-dashboard-from-bank",
                 "back-to-dashboard-from-products",
                 "back-to-dashboard-from-my-products",
@@ -430,11 +430,11 @@ if (transactionsNav && transactionsSection) {
 
     function showSection(sectionToShow) {
         if (!sectionToShow) return;
-        
+
         Object.values(sections).forEach(section => {
             if (section) section.classList.add("hidden");
         });
-        
+
         sectionToShow.classList.remove("hidden");
     }
 
@@ -443,7 +443,7 @@ if (transactionsNav && transactionsSection) {
             ["stable", "welfare", "wages"].forEach(tab => {
                 const tabElement = getElement(`${tab}-products-tab`, false);
                 const contentElement = getElement(`${tab}-products-content`, false);
-                
+
                 if (tabElement) {
                     tabElement.classList.remove("tab-active");
                     tabElement.classList.add("text-text-secondary");
@@ -455,7 +455,7 @@ if (transactionsNav && transactionsSection) {
 
             const activeTab = getElement(`${tabName}-products-tab`, false);
             const activeContent = getElement(`${tabName}-products-content`, false);
-            
+
             if (activeTab) {
                 activeTab.classList.add("tab-active");
                 activeTab.classList.remove("text-text-secondary");

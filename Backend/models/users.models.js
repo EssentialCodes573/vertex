@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema({
     mobilenumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     balance: { type: Number, default: 0 },
-    referralCode: { type: String, unique: true },
     bonus: { type: Number, default: 0 },
     referredBy: { type: String, default: null }
 });

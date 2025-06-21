@@ -7,6 +7,7 @@
     <title>Vertex</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    li
     <link rel="stylesheet" href="/main/style.css" />
     <!-- <script src="/main/script.js" defer></script> -->
 
@@ -102,94 +103,102 @@
     </div>
 
     <main class="flex-grow p-4 md:p-8">
+         <% if (user && user.username) { %>
+                    <h2 class="text-2xl font-bold mb-4 text-center">
+                        Welcome, <span class="text-accent">
+                            <%= user.username %>
+                        </span>!
+                    </h2>
+                    <% } %>
         <div class="max-w-4xl mx-auto">
             <!-- Dashboard Section -->
             <div id="dashboard-section">
-                <section class="text-center mb-8">
-                    <p class="text-text-secondary text-sm mb-2">Your Stable Balance</p>
-                    <p class="text-4xl font-bold mb-4">₦<span id="balance">
-                            <%= balance %>
-                        </span></p>
-                    <p>Your bonus: <%= user ? user.bonus : 0 %>
-                    </p>
-                    <p>Your referrals: <%= user && user.referrals ? user.referrals.length : 0 %>
-                    </p>
-                    <div class="relative inline-block">
-                        <button
-                            class="bg-secondary text-accent py-2 px-4 rounded-lg flex items-center space-x-2 border border-accent">
-                            <i class="fas fa-wallet text-accent"></i>
-                            <span>Stable account</span>
-                            <i class="fas fa-chevron-down text-xs ml-2"></i>
-                        </button>
-                    </div>
-                </section>
-
-                <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                    <div id="deposit-button" class="icon-box cursor-pointer">
-                        <i class="fas fa-money-bill-wave text-3xl mb-2 text-accent"></i>
-                        <span>Deposit</span>
-                    </div>
-                    <div id="withdraw-button" class="icon-box cursor-pointer">
-                        <i class="fas fa-exchange-alt text-3xl mb-2 text-accent"></i>
-                        <span>Withdraw</span>
-                    </div>
-                    <div id="bank-button" class="icon-box cursor-pointer">
-                        <i class="fas fa-university text-3xl mb-2 text-accent"></i>
-                        <span>Bank</span>
-                    </div>
-                    <div id="products-button" class="icon-box cursor-pointer">
-                        <i class="fas fa-box-open text-3xl mb-2 text-accent"></i>
-                        <span>Products</span>
-                    </div>
-                    <div id="my-products-button" class="icon-box cursor-pointer">
-                        <i class="fas fa-cube text-3xl mb-2 text-accent"></i>
-                        <span>My Products</span>
-                    </div>
-                    <div id="invite-button" class="icon-box cursor-pointer">
-                        <i class="fas fa-user-plus text-3xl mb-2 text-accent"></i>
-                        <span>Invite</span>
-                    </div>
-                    <div class="icon-box">
-                        <i class="fas fa-headset text-3xl mb-2 text-accent"></i>
-                        <span>Support</span>
-                    </div>
-                    <div class="icon-box">
-                        <i class="fas fa-history text-3xl mb-2 text-accent"></i>
-                        <span>Transactions</span>
-                    </div>
-                </section>
-
-                <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
-                    <div class="card">
-                        <h3 class="text-lg font-semibold mb-2">
-                            Refer friends to Wealthwave
-                        </h3>
-                        <p class="text-text-secondary text-sm mb-4">
-                            Invite your friends and family to earn on Wealthwave and get 25%
-                            of their first purchase
-                        </p>
-                        <div class="flex justify-end">
-                            <div
-                                class="w-24 h-24 bg-secondary rounded-full flex items-center justify-center text-accent">
-                                <i class="fas fa-gift text-3xl"></i>
+               
+                        <section class="text-center mb-8">
+                            <p class="text-text-secondary text-sm mb-2">Your Stable Balance</p>
+                            <p class="text-4xl font-bold mb-4">₦<span id="balance">
+                                    <%= balance %>
+                                </span></p>
+                            <p>Your bonus: <%= user ? user.bonus : 0 %>
+                            </p>
+                            <p>Your referrals: <%= user && user.referrals ? user.referrals.length : 0 %>
+                            </p>
+                            <div class="relative inline-block">
+                                <button
+                                    class="bg-secondary text-accent py-2 px-4 rounded-lg flex items-center space-x-2 border border-accent">
+                                    <i class="fas fa-wallet text-accent"></i>
+                                    <span>Stable account</span>
+                                    <i class="fas fa-chevron-down text-xs ml-2"></i>
+                                </button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="highlight-card">
-                        <h3 class="text-lg font-semibold mb-2">High yield Products</h3>
-                        <p class="text-text-secondary text-sm">
-                            Discover products with high returns. Start investing today!
-                            Invite your friends and family to earn on Wealthwave and also
-                            earn commisions.
-                        </p>
-                        <div class="flex justify-end">
-                            <div
-                                class="w-24 h-24 bg-accent bg-opacity-10 rounded-full flex items-center justify-center text-accent">
-                                <i class="fas fa-chart-line text-3xl"></i>
+                        </section>
+
+                        <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                            <div id="deposit-button" class="icon-box cursor-pointer">
+                                <i class="fas fa-money-bill-wave text-3xl mb-2 text-accent"></i>
+                                <span>Deposit</span>
                             </div>
-                        </div>
-                    </div>
-                </section>
+                            <div id="withdraw-button" class="icon-box cursor-pointer">
+                                <i class="fas fa-exchange-alt text-3xl mb-2 text-accent"></i>
+                                <span>Withdraw</span>
+                            </div>
+                            <div id="bank-button" class="icon-box cursor-pointer">
+                                <i class="fas fa-university text-3xl mb-2 text-accent"></i>
+                                <span>Bank</span>
+                            </div>
+                            <div id="products-button" class="icon-box cursor-pointer">
+                                <i class="fas fa-box-open text-3xl mb-2 text-accent"></i>
+                                <span>Products</span>
+                            </div>
+                            <div id="my-products-button" class="icon-box cursor-pointer">
+                                <i class="fas fa-cube text-3xl mb-2 text-accent"></i>
+                                <span>My Products</span>
+                            </div>
+                            <div id="invite-button" class="icon-box cursor-pointer">
+                                <i class="fas fa-user-plus text-3xl mb-2 text-accent"></i>
+                                <span>Invite</span>
+                            </div>
+                            <div class="icon-box">
+                                <i class="fas fa-headset text-3xl mb-2 text-accent"></i>
+                                <span>Support</span>
+                            </div>
+                            <div class="icon-box">
+                                <i class="fas fa-history text-3xl mb-2 text-accent"></i>
+                                <span>Transactions</span>
+                            </div>
+                        </section>
+
+                        <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
+                            <div class="card">
+                                <h3 class="text-lg font-semibold mb-2">
+                                    Refer friends to Wealthwave
+                                </h3>
+                                <p class="text-text-secondary text-sm mb-4">
+                                    Invite your friends and family to earn on Wealthwave and get 25%
+                                    of their first purchase
+                                </p>
+                                <div class="flex justify-end">
+                                    <div
+                                        class="w-24 h-24 bg-secondary rounded-full flex items-center justify-center text-accent">
+                                        <i class="fas fa-gift text-3xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="highlight-card">
+                                <h3 class="text-lg font-semibold mb-2">High yield Products</h3>
+                                <p class="text-text-secondary text-sm">
+                                    Discover products with high returns. Start investing today!
+                                    Invite your friends and family to earn on Wealthwave and also
+                                    earn commisions.
+                                </p>
+                                <div class="flex justify-end">
+                                    <div
+                                        class="w-24 h-24 bg-accent bg-opacity-10 rounded-full flex items-center justify-center text-accent">
+                                        <i class="fas fa-chart-line text-3xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
             </div>
 
             <div id="deposit-section" class="hidden flex justify-center items-center py-8">
@@ -666,7 +675,8 @@
     <!-- <pre><%= JSON.stringify(user, null, 2) %></pre> -->
 
     <script>
-        window.currentUser = <% - JSON.stringify(user) %>;
+        window.currentUser = <%- JSON.stringify(user) %>;
+        console.log("Current User:", window.currentUser);
     </script>
     <script src="/main/script.js" defer></script>
 

@@ -345,31 +345,34 @@
       const response = await fetch('http://localhost:3000/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include' // Include cookies for session management
       });
       const result = await response.json();
       alert(result.message || (response.ok ? 'Signup successful!' : 'Signup failed!'));
     });
 
     // Handlig the Login
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const formData = new FormData(this);
-      const data = Object.fromEntries(formData.entries());
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const data = Object.fromEntries(formData.entries());
 
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const result = await response.json();
-      if (result.message === 'Login successful!') {
-        window.location.href = '/home'
-        // Optionally, save token: localStorage.setItem('token', result.token);
-      } else {
-        alert(result.message || 'Login failed!');
-      }
-    });
+  const response = await fetch('http://localhost:3000/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+    credentials: 'include'
+  });
+  const result = await response.json();
+
+  if (response.ok) {
+    // Redirect to /home after successful login
+    window.location.href = '/home';
+  } else {
+    alert(result.message || 'Login failed!');
+  }
+});
   </script>
 </body>
 
