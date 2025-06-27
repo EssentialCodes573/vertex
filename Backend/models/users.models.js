@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     balance: { type: Number, default: 0 },
     bonus: { type: Number, default: 0 },
+    profileImage: { type: String, default: "" },
+    isAdmin: { type: Boolean, default: false },
     referredBy: { type: String, default: null }
 });
 

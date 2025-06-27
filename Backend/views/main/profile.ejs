@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile | Vertex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#18181b",
+              accent: "#a855f7",
+              secondary: "#23232a",
+            },
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-in-out",
+              float: "float 3s ease-in-out infinite",
+              "pulse-slow": "pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-5px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body class="min-h-screen bg-primary text-white flex flex-col">
+    <header
+      class="p-4 flex items-center justify-between bg-secondary shadow-lg border-b border-accent/20 sticky top-0 z-50"
+    >
+      <div class="flex items-center space-x-2 animate-fade-in">
+        <div
+          class="w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-purple-glow hover:scale-110 transition-transform duration-300"
+        >
+          <i class="fas fa-wave-square text-primary text-xl"></i>
+        </div>
+        <span class="text-lg font-semibold text-accent">Vertex</span>
+      </div>
+      <a
+        href="/home"
+        class="text-accent hover:text-purple-300 flex items-center transition-colors duration-300 group"
+      >
+        <i
+          class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"
+        ></i>
+        <span class="group-hover:underline">Back to Dashboard</span>
+      </a>
+    </header>
+
+    <main class="flex-grow max-w-3xl mx-auto p-6 animate-fade-in">
+      <!-- Profile Card -->
+      <div
+        class="bg-secondary rounded-xl shadow-xl p-6 mb-8 flex flex-col md:flex-row items-center md:items-start border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:shadow-purple-500/10"
+      >
+        <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-8 animate-float">
+          <div
+            class="flex-shrink-0 mb-4 md:mb-0 md:mr-8 flex flex-col items-center"
+          >
+            <div
+              class="w-24 h-24 rounded-full bg-purple-700 flex items-center justify-center text-4xl text-purple-200 shadow-lg border-4 border-purple-900 overflow-hidden"
+            >
+              <% if (user.profileImage) { %>
+              <img
+                src="<%= user.profileImage %>"
+                alt="Profile"
+                class="object-cover w-full h-full"
+              />
+              <% } else { %>
+              <i class="fas fa-user"></i>
+              <% } %>
+            </div>
+            <form
+              action="/profile/upload"
+              method="POST"
+              enctype="multipart/form-data"
+              class="mt-3 flex flex-col items-center"
+            >
+              <label
+                class="block text-purple-300 text-sm mb-1 cursor-pointer hover:underline"
+              >
+                <i class="fas fa-camera mr-1"></i> Change Photo
+                <input
+                  type="file"
+                  name="profileImage"
+                  accept="image/*"
+                  class="hidden"
+                  onchange="this.form.submit()"
+                />
+              </label>
+            </form>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <h2
+            class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-300"
+          >
+            <%= user.firstname %> <%= user.lastname %>
+          </h2>
+          <p
+            class="text-gray-300 hover:text-white transition-colors duration-300"
+          >
+            <i class="fas fa-user-circle mr-2 text-accent"></i>
+            <span class="font-semibold">Username:</span> <%= user.username %>
+          </p>
+          <p
+            class="text-gray-300 hover:text-white transition-colors duration-300"
+          >
+            <i class="fas fa-envelope mr-2 text-accent"></i>
+            <span class="font-semibold">Email:</span> <%= user.email %>
+          </p>
+          <p
+            class="text-gray-300 hover:text-white transition-colors duration-300"
+          >
+            <i class="fas fa-phone mr-2 text-accent"></i>
+            <span class="font-semibold">Mobile:</span> <%= user.mobilenumber %>
+          </p>
+          <p
+            class="text-gray-300 hover:text-white transition-colors duration-300"
+          >
+            <i class="fas fa-wallet mr-2 text-accent"></i>
+            <span class="font-semibold">Balance:</span>
+            <span class="text-green-400 font-mono"
+              >₦<%= user.balance.toLocaleString() %></span
+            >
+          </p>
+          <p
+            class="text-gray-300 hover:text-white transition-colors duration-300"
+          >
+            <i class="fas fa-gift mr-2 text-accent"></i>
+            <span class="font-semibold">Bonus:</span>
+            <span class="text-purple-300 font-mono"
+              >₦<%= user.bonus.toLocaleString() %></span
+            >
+          </p>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Transactions -->
+        <div
+          class="bg-secondary rounded-xl shadow-lg p-6 border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:shadow-purple-500/10"
+        >
+          <h3
+            class="text-xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-300 flex items-center"
+          >
+            <i class="fas fa-history mr-2 animate-pulse-slow"></i>Transactions
+          </h3>
+          <% if (purchases && purchases.length > 0) { %>
+          <ul
+            class="space-y-3 max-h-64 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-accent scrollbar-track-secondary"
+          >
+            <% purchases.forEach(function(purchase) { %>
+            <li
+              class="flex justify-between items-center border-b border-gray-700 pb-2 hover:bg-primary/50 px-2 py-1 rounded transition-all duration-300"
+            >
+              <div>
+                <span class="font-semibold text-purple-300"
+                  ><%= purchase.product ? purchase.product.name : 'Product'
+                  %></span
+                >
+                <span class="text-xs text-gray-400 ml-2"
+                  >x<%= purchase.quantity %></span
+                >
+                <div class="text-xs text-gray-400">
+                  <%= purchase.purchasedAt.toLocaleDateString() %>
+                </div>
+              </div>
+              <div
+                class="text-green-400 font-bold transition-transform hover:scale-105"
+              >
+                -₦<%= purchase.product ? (purchase.product.price *
+                purchase.quantity).toLocaleString() : '0' %>
+              </div>
+            </li>
+            <% }) %>
+          </ul>
+          <% } else { %>
+          <p class="text-gray-400 italic">No transactions yet.</p>
+          <% } %>
+        </div>
+
+        <!-- Referrals -->
+        <div
+          class="bg-secondary rounded-xl shadow-lg p-6 border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:shadow-purple-500/10"
+        >
+          <h3
+            class="text-xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-300 flex items-center"
+          >
+            <i class="fas fa-user-friends mr-2 animate-pulse-slow"></i>Referrals
+          </h3>
+          <% if (referrals && referrals.length > 0) { %>
+          <ul
+            class="space-y-3 max-h-64 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-accent scrollbar-track-secondary"
+          >
+            <% referrals.forEach(function(ref) { %>
+            <li
+              class="flex justify-between items-center border-b border-gray-700 pb-2 hover:bg-primary/50 px-2 py-1 rounded transition-all duration-300"
+            >
+              <div>
+                <span class="font-semibold text-purple-300"
+                  ><%= ref.referredUsername || ref.referredEmail || 'User'
+                  %></span
+                >
+                <div class="text-xs text-gray-400">
+                  <%= ref.createdAt ? ref.createdAt.toLocaleDateString() : '' %>
+                </div>
+              </div>
+              <span
+                class="text-green-400 font-bold transition-transform hover:scale-110"
+                >+25%</span
+              >
+            </li>
+            <% }) %>
+          </ul>
+          <% } else { %>
+          <p class="text-gray-400 italic">No referrals yet.</p>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Purchased Products -->
+      <div
+        class="bg-secondary rounded-xl shadow-lg p-6 mb-8 border border-accent/20 hover:border-accent/40 transition-all duration-500 hover:shadow-purple-500/10"
+      >
+        <h3
+          class="text-xl font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-300 flex items-center"
+        >
+          <i class="fas fa-box-open mr-2 animate-pulse-slow"></i>Purchased
+          Products
+        </h3>
+        <% if (purchases && purchases.length > 0) { %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <% purchases.forEach(function(purchase) { %>
+          <div
+            class="bg-primary rounded-lg p-4 flex flex-col shadow border border-accent/10 hover:border-accent/30 transition-all duration-300 hover:shadow-purple-500/20 hover:-translate-y-1"
+          >
+            <div class="flex items-center mb-2">
+              <i
+                class="fas fa-cube text-accent text-2xl mr-2 transition-transform hover:rotate-12 duration-300"
+              ></i>
+              <span class="font-semibold text-purple-300"
+                ><%= purchase.product ? purchase.product.name : 'Product'
+                %></span
+              >
+            </div>
+            <div
+              class="text-gray-400 text-sm mb-1 hover:text-white transition-colors"
+            >
+              Quantity: <span class="font-mono"><%= purchase.quantity %></span>
+            </div>
+            <div
+              class="text-gray-400 text-sm mb-1 hover:text-white transition-colors"
+            >
+              Purchased:
+              <span class="font-mono"
+                ><%= purchase.purchasedAt.toLocaleDateString() %></span
+              >
+            </div>
+            <div
+              class="text-gray-400 text-sm mb-1 hover:text-white transition-colors"
+            >
+              Price:
+              <span class="font-mono text-green-400"
+                >₦<%= purchase.product ? purchase.product.price.toLocaleString()
+                : '0' %></span
+              >
+            </div>
+            <div
+              class="text-gray-400 text-sm hover:text-white transition-colors"
+            >
+              Total:
+              <span class="font-mono text-green-400"
+                >₦<%= purchase.product ? (purchase.product.price *
+                purchase.quantity).toLocaleString() : '0' %></span
+              >
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <p class="text-gray-400 italic">No products purchased yet.</p>
+        <% } %>
+      </div>
+    </main>
+
+    <footer
+      class="p-4 text-center text-gray-500 text-sm bg-secondary border-t border-accent/20"
+    >
+      &copy; <%= new Date().getFullYear() %> Vertex. All rights reserved.
+    </footer>
+  </body>
+</html>
