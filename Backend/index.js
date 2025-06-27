@@ -114,7 +114,8 @@ app.get("/home", async (req, res) => {
   const balance = user ? user.balance : 0;
   console.log("[GET /home] Rendering dashboard with balance:", balance);
   console.log("User sent to EJS:", user);
-  res.render("main/vertex", { user, balance, transactions: purchases });
+  const referralCount = await Referral.countDocuments({ referrer: user._id });
+  res.render("main/vertex", { user, balance, transactions: purchases, referralCount });
   console.log("[GET /home] Home page rendered successfully");
 });
 

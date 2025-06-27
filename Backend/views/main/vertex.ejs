@@ -187,7 +187,7 @@
             </p>
             <p>Your bonus: <%= user ? user.bonus : 0 %></p>
             <p>
-              Your referrals: <%= user && user.referrals ? user.referrals.length
+              Your referrals: <%= user  ? referralCount
               : 0 %>
             </p>
             <div class="relative inline-block">
