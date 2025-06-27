@@ -223,7 +223,17 @@ function adminOnly(req, res, next) {
 app.get("/admin", adminOnly, async (req, res) => {
   const user = await User.findOne({ username: req.session.username });
   const users = await User.find(); // Fetch all users
-  res.render("admin/dashboard", { user, users });
+
+  // for each user, get referral count
+  const usersWithReferrals = await Promise.all(users.map(async (user) => {
+  return {
+    username: user.username,
+    balance: user.balance,
+    referralsCount: await Referral.countDocuments({ referrer: user._id }),
+    profileImage: user.profileImage || "/uploads/default.png"
+  };
+}));
+res.render("admin/dashboard", { users: usersWithReferrals });
 });
 
 // Admin user management

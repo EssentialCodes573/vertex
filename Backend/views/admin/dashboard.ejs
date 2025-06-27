@@ -67,6 +67,12 @@
                 Deposit Amount (₦)
               </th>
               <th scope="col" class="px-4 py-3 text-left text-sm font-medium">
+                Balance (₦)
+              </th>
+              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">
+               Referrals
+              </th>
+              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">
                 Actions
               </th>
             </tr>
@@ -76,6 +82,8 @@
             <tr class="border-b hover:bg-gray-50 user-row">
               <td class="px-4 py-3 whitespace-nowrap"><%= user.username %></td>
               <td class="px-4 py-3 whitespace-nowrap"><%= user.email %></td>
+              <td class="px-4 py-3 whitespace-nowrap"><%= user.balance %></td>
+              <td class="px-4 py-3 whitespace-nowrap"><%= user.referralCount %></td>
               <td
                 class="px-4 py-3 whitespace-nowrap font-semibold text-green-600"
               >
