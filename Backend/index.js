@@ -100,8 +100,7 @@ app.get("/home", async (req, res) => {
       credited = true;
       await purchase.save();
       console.log(
-        `[GET /home] Credited purchase ${purchase._id} with ${
-          dailyReturn * daysPassed
+        `[GET /home] Credited purchase ${purchase._id} with ${dailyReturn * daysPassed
         }`
       );
     }
@@ -220,20 +219,22 @@ function adminOnly(req, res, next) {
   next();
 }
 
+// Admin dashboard
 app.get("/admin", adminOnly, async (req, res) => {
   const user = await User.findOne({ username: req.session.username });
   const users = await User.find(); // Fetch all users
 
   // for each user, get referral count
   const usersWithReferrals = await Promise.all(users.map(async (user) => {
-  return {
-    username: user.username,
-    balance: user.balance,
-    referralsCount: await Referral.countDocuments({ referrer: user._id }),
-    profileImage: user.profileImage || "/uploads/default.png"
-  };
-}));
-res.render("admin/dashboard", { users: usersWithReferrals });
+    return {
+      username: user.username,
+      balance: user.balance,
+      referralsCount: await Referral.countDocuments({ referrer: user._id }),
+      profileImage: user.profileImage || "/uploads/default.png",
+      _id: user._id
+    };
+  }));
+  res.render("admin/dashboard", { users: usersWithReferrals });
 });
 
 // Admin user management
@@ -243,6 +244,26 @@ app.post("/admin/users/:id/delete", adminOnly, async (req, res) => {
     res.redirect("/admin");
   } catch (err) {
     res.status(500).send("Error deleting user");
+  }
+});
+
+// Admin view user profile
+app.get("/admin/users/:id", adminOnly, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).send("User not found");
+
+    // Fetch purchases and referrals for this user
+    const purchases = await Purchase.find({ user: user._id }).populate("product");
+    const referrals = await Referral.find({ referrer: user._id });
+
+    res.render("admin/user-profile", {
+      user,
+      purchases,
+      referrals,
+    });
+  } catch (err) {
+    res.status(500).send("Error loading user profile");
   }
 });
 

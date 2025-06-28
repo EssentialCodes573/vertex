@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>User Profile - <%= user.username %>
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow px-8 py-4 flex justify-between items-center">
+        <div class="text-2xl font-bold text-blue-600">Admin Panel</div>
+        <a href="/admin" class="text-gray-600 hover:text-blue-600">Back to Dashboard</a>
+    </nav>
+    <main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow">
+        <div class="flex items-center gap-6 mb-8">
+            <img src="<%= user.profileImage || '/uploads/default.png' %>" alt="Profile Image"
+                class="w-24 h-24 rounded-full border-2 border-blue-500 object-cover" />
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 mb-1">
+                    <%= user.username %>
+                </h1>
+                <p class="text-gray-600 mb-1">Email: <span class="font-medium">
+                        <%= user.email || 'N/A' %>
+                    </span></p>
+                <p class="text-gray-600 mb-1">Balance: <span class="font-semibold text-green-600">₦<%=
+                            user.balance.toLocaleString() %></span></p>
+                <p class="text-gray-600">Referrals: <span class="font-semibold">
+                        <%= referrals.length %>
+                    </span></p>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">Purchases</h2>
+            <% if (purchases && purchases.length> 0) { %>
+                <table class="min-w-full bg-white border rounded">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700">
+                            <th class="px-4 py-2 text-left">Product</th>
+                            <th class="px-4 py-2 text-left">Quantity</th>
+                            <th class="px-4 py-2 text-left">Date</th>
+                            <th class="px-4 py-2 text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% purchases.forEach(purchase=> { %>
+                            <tr class="border-b">
+                                <td class="px-4 py-2">
+                                    <%= purchase.product ? purchase.product.name : 'N/A' %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= purchase.quantity %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= purchase.purchasedAt ? purchase.purchasedAt.toLocaleDateString() : 'N/A' %>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <%= purchase.status || 'Completed' %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                    <p class="text-gray-500">No purchases found.</p>
+                    <% } %>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">Referrals</h2>
+            <% if (referrals && referrals.length> 0) { %>
+                <ul class="list-disc pl-6">
+                    <% referrals.forEach(ref=> { %>
+                        <li class="mb-1 text-gray-700">
+                            <span class="font-medium">User ID:</span>
+                            <%= ref.referred %>
+                                <span class="ml-2 text-gray-500 text-sm">Date: <%= ref.createdAt ?
+                                        ref.createdAt.toLocaleDateString() : 'N/A' %></span>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } else { %>
+                    <p class="text-gray-500">No referrals found.</p>
+                    <% } %>
+        </div>
+    </main>
+</body>
+
+</html>

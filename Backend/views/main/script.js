@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Only run this script if window.currentUser is defined
+    if (!window.currentUser) return;
+
     // Error handling wrapper
     function safeExecute(fn, context = 'Operation') {
         try {
@@ -134,6 +137,14 @@ document.addEventListener("DOMContentLoaded", function () {
         invite: getElement("invite-button")
     };
 
+    // Show product section by clicking the products button
+    document.getElementById('show-products-list').addEventListener('click', function () {
+        document.getElementById('purchased-products-section').classList.remove('hidden');
+        // Optionally hide other sections here
+    });
+    document.getElementById('close-products-list').addEventListener('click', function () {
+        document.getElementById('purchased-products-section').classList.add('hidden');
+    });
 
     // User menu setup
     const userMenuButton = getElement("user-menu-button", false);
