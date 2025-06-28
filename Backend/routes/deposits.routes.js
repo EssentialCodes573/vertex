@@ -4,6 +4,6 @@ const depositsController = require('../controllers/deposits.controllers');
 const auth = require('../middleware/auth');
 
 router.post('/', auth, depositsController.createDeposit);
-router.get('/', auth, depositsController.getUserDeposits);
+// router.get('/', auth, depositsController.getUserDeposits);
 
 module.exports = router;

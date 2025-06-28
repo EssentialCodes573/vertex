@@ -5,6 +5,13 @@ const userSchema = new mongoose.Schema({
     firstname: { type: String, required: true, unique: true },
     lastname: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
+    banks: [
+    {
+      bankName: String,
+      accountNumber: String,
+      accountName: String
+    }
+  ],
     email: { type: String, required: true, unique: true },
     mobilenumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },

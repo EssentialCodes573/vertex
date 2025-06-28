@@ -28,6 +28,11 @@ const depositsRoutes = require("./routes/deposits.routes");
 const referralRoutes = require("./routes/referral.routes");
 const authRoutes = require("./routes/users.routes");
 const Referral = require("./models/referral.models");
+const bankRoutes = require("./routes/bank.routes");
+const notificationRoutes = require("./routes/notifications.routes");
+const adminRoutes = require("./routes/admin.routes");
+const Product = require("./models/product.models");
+// const products = require("./seed_products");
 
 // Middleware
 app.use(cors());
@@ -61,6 +66,24 @@ app.use("/main", express.static(path.join(__dirname, "views", "main")));
 app.use("/land", express.static(path.join(__dirname, "views", "land")));
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
+// bank lists
+app.use("/api/bank", bankRoutes);
+// noftications
+app.use("/api/notifications", notificationRoutes);
+// Admin routes
+app.use("/api/admin", adminRoutes);
+// Purchase routes
+app.use("/api/purchases", purchaseRoutes);
+// products
+app.get("/api/products", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
+});
+
 // Redirect root to login
 app.get("/", (req, res) => {
   console.log("[GET /] Redirecting to /login");
@@ -84,6 +107,8 @@ app.get("/home", async (req, res) => {
   // Fetch all purchases for this user, including product info
   const purchases = await Purchase.find({ user: user._id }).populate("product");
   console.log("[GET /home] Purchases found:", purchases.length);
+  const products = await Product.find();
+  console.log("[GET /home] products found:", products.length);
 
   let credited = false;
   const now = new Date();
@@ -100,7 +125,8 @@ app.get("/home", async (req, res) => {
       credited = true;
       await purchase.save();
       console.log(
-        `[GET /home] Credited purchase ${purchase._id} with ${dailyReturn * daysPassed
+        `[GET /home] Credited purchase ${purchase._id} with ${
+          dailyReturn * daysPassed
         }`
       );
     }
@@ -114,7 +140,13 @@ app.get("/home", async (req, res) => {
   console.log("[GET /home] Rendering dashboard with balance:", balance);
   console.log("User sent to EJS:", user);
   const referralCount = await Referral.countDocuments({ referrer: user._id });
-  res.render("main/vertex", { user, balance, transactions: purchases, referralCount });
+  res.render("main/vertex", {
+    user,
+    products,
+    balance,
+    transactions: purchases,
+    referralCount,
+  });
   console.log("[GET /home] Home page rendered successfully");
 });
 
@@ -164,6 +196,7 @@ app.post("/api/auth/login", async (req, res) => {
   if (user && (await user.comparePassword(password))) {
     req.session.username = username;
     req.session.isAdmin = user.isAdmin || false;
+    req.session.userId = user._id; // Store user ID in session
     req.session.save((err) => {
       if (err) {
         console.error("[POST /api/auth/login] Session save error:", err);
@@ -225,15 +258,17 @@ app.get("/admin", adminOnly, async (req, res) => {
   const users = await User.find(); // Fetch all users
 
   // for each user, get referral count
-  const usersWithReferrals = await Promise.all(users.map(async (user) => {
-    return {
-      username: user.username,
-      balance: user.balance,
-      referralsCount: await Referral.countDocuments({ referrer: user._id }),
-      profileImage: user.profileImage || "/uploads/default.png",
-      _id: user._id
-    };
-  }));
+  const usersWithReferrals = await Promise.all(
+    users.map(async (user) => {
+      return {
+        username: user.username,
+        balance: user.balance,
+        referralsCount: await Referral.countDocuments({ referrer: user._id }),
+        profileImage: user.profileImage || "/uploads/default.png",
+        _id: user._id,
+      };
+    })
+  );
   res.render("admin/dashboard", { users: usersWithReferrals });
 });
 
@@ -254,7 +289,9 @@ app.get("/admin/users/:id", adminOnly, async (req, res) => {
     if (!user) return res.status(404).send("User not found");
 
     // Fetch purchases and referrals for this user
-    const purchases = await Purchase.find({ user: user._id }).populate("product");
+    const purchases = await Purchase.find({ user: user._id }).populate(
+      "product"
+    );
     const referrals = await Referral.find({ referrer: user._id });
 
     res.render("admin/user-profile", {
@@ -265,6 +302,47 @@ app.get("/admin/users/:id", adminOnly, async (req, res) => {
   } catch (err) {
     res.status(500).send("Error loading user profile");
   }
+});
+
+// logout
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Logout error:", err);
+      return res.status(500).send("Could not log out.");
+    }
+    res.redirect("/login");
+  });
+});
+
+// Deposit endpoint
+app.post("/deposit", async (req, res) => {
+  const { userId, amount } = req.body;
+  if (!userId || !amount || amount <= 0) {
+    return res.status(400).json({ success: false, message: "Invalid input" });
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  // Credit deposit to user's balance
+  user.balance = (user.balance || 0) + amount;
+  await user.save();
+
+  // Referral bonus logic
+  if (user.referredBy) {
+   const referrer = await User.findOne({ username: user.referredBy });
+    if (referrer) {
+      const bonus = amount * 0.25;
+      referrer.bonus = (referrer.bonus || 0) + bonus;
+      await referrer.save();
+      // Optionally: log the bonus transaction here
+    }
+  }
+
+  res.json({ success: true });
 });
 
 // Deposit request API
@@ -316,14 +394,15 @@ app.post("/wema/webhook", async (req, res) => {
 });
 
 // API routes
-app.use("/api/purchases", purchaseRoutes);
+// app.use("/api/purchases", purchaseRoutes);
 app.use("/api/accounts", accountsRoutes);
 app.use("/api/deposits", depositsRoutes);
 app.use("/api/referrals", referralRoutes);
 app.use("/api/auth", authRoutes);
 
 // Start server
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`Server Started at http://localhost:${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server Started at http://localhost:${PORT}`);
+  });
 });

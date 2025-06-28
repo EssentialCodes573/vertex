@@ -1,402 +1,460 @@
 :root {
-    --primary: #000000;
-    /* Black */
-    --secondary: #1a1a1a;
-    /* Darker gray for secondary elements */
-    --accent: #bb86fc;
-    /* A vibrant purple for accent, suitable for dark themes */
-    --text-primary: #e0e0e0;
-    /* Light gray for primary text */
-    --text-secondary: #a0a0a0;
-    /* Muted gray for secondary text */
+  --primary: #000000;
+  /* Black */
+  --secondary: #1a1a1a;
+  /* Darker gray for secondary elements */
+  --accent: #bb86fc;
+  /* A vibrant purple for accent, suitable for dark themes */
+  --text-primary: #e0e0e0;
+  /* Light gray for primary text */
+  --text-secondary: #a0a0a0;
+  /* Muted gray for secondary text */
 }
 
 body {
-    font-family: "Inter", sans-serif;
-    background: linear-gradient(rgba(0, 0, 0, 0.9),
-            /* More opaque black overlay */
-            rgba(0, 0, 0, 0.9)),
-        url("https://i.pinimg.com/736x/f3/f7/41/f3f741ae526373f54fc83543f538d388.jpg") repeat;
-    /* Kept original background image */
-    color: var(--text-primary);
-    min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.9),
+      /* More opaque black overlay */ rgba(0, 0, 0, 0.9)
+    ),
+    url("https://i.pinimg.com/736x/f3/f7/41/f3f741ae526373f54fc83543f538d388.jpg")
+      repeat;
+  /* Kept original background image */
+  color: var(--text-primary);
+  min-height: 100vh;
 }
 
 .bottom-nav-gradient {
-    background: linear-gradient(to right,
-            var(--primary) 50%,
-            var(--accent) 100%);
+  background: linear-gradient(to right, var(--primary) 50%, var(--accent) 100%);
 }
 
 /* Targeting the main section container */
 #my-products-section {
-    /* Reduce overall padding if it's too much */
-    padding: 1rem;
-    /* Example: reduced padding */
+  /* Reduce overall padding if it's too much */
+  padding: 1rem;
+  /* Example: reduced padding */
 }
 
 /* Adjusting the grid of product cards */
 .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3.gap-4.mb-6 {
-    /* For very small screens, you might keep it to one column or adjust gap */
-    gap: 0.5rem;
-    /* Reduce gap between cards */
+  /* For very small screens, you might keep it to one column or adjust gap */
+  gap: 0.5rem;
+  /* Reduce gap between cards */
 }
 
 /* Make product cards more compact */
 .my-product-card {
-    padding: 0.75rem;
-    /* Reduce padding inside cards */
+  padding: 0.75rem;
+  /* Reduce padding inside cards */
 }
 
 /* Adjust font sizes if needed */
 .my-product-card h3 {
-    font-size: 0.9rem;
-    /* Smaller heading */
+  font-size: 0.9rem;
+  /* Smaller heading */
 }
 
 .my-product-card p {
-    font-size: 2rem;
-    /* Smaller number */
+  font-size: 2rem;
+  /* Smaller number */
 }
 
 /* Ensure the filter select box is compact */
 #filter-my-products {
-    padding: 0.5rem;
-    /* Reduce padding in select box */
-    font-size: 0.9rem;
-    /* Smaller font size */
+  padding: 0.5rem;
+  /* Reduce padding in select box */
+  font-size: 0.9rem;
+  /* Smaller font size */
 }
 
 /* Ensure the "No Active Investments" card is not excessively large */
 .card.p-4.text-center {
-    padding: 1rem;
-    /* Reduce padding */
+  padding: 1rem;
+  /* Reduce padding */
 }
 
 /* Make sure the explore button isn't too tall */
 .submit-button {
-    padding: 0.75rem 1.5rem;
-    /* Adjust padding to control height */
-    font-size: 0.9rem;
-    /* Smaller text if desired */
+  padding: 0.75rem 1.5rem;
+  /* Adjust padding to control height */
+  font-size: 0.9rem;
+  /* Smaller text if desired */
 }
 
 /* For smaller screens, you might want to adjust the columns further */
 @media (max-width: 640px) {
-
-    /* Adjust breakpoint as needed for small screens */
-    .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3.gap-4.mb-6 {
-        grid-template-columns: repeat(auto-fit,
-                minmax(140px, 1fr));
-        /* Adjust min card width */
-    }
+  /* Adjust breakpoint as needed for small screens */
+  .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3.gap-4.mb-6 {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    /* Adjust min card width */
+  }
 }
 
 /* Target the main section container */
 #invites-section section {
-    /* Reduce overall section padding */
-    padding: 1rem;
-    /* Example: smaller overall padding */
+  /* Reduce overall section padding */
+  padding: 1rem;
+  /* Example: smaller overall padding */
 }
 
 /* Adjust the back button margin */
 #back-to-dashboard-from-invites {
-    margin-right: 0.5rem;
-    /* Slightly less space */
+  margin-right: 0.5rem;
+  /* Slightly less space */
 }
 
 /* Make the main circle icon smaller */
 .w-48.h-48 {
-    width: 12rem;
-    /* Example: Reduced from 12rem (48 * 0.25rem) to 9rem */
-    height: 12rem;
-    /* Reduce the height proportionally */
+  width: 12rem;
+  /* Example: Reduced from 12rem (48 * 0.25rem) to 9rem */
+  height: 12rem;
+  /* Reduce the height proportionally */
 }
 
 .w-48.h-48 i {
-    font-size: 4rem;
-    /* Make the icon inside smaller too */
+  font-size: 4rem;
+  /* Make the icon inside smaller too */
 }
 
 /* Compact the referral link card */
 .card.mb-6.flex.items-center.justify-between.p-3 {
-    padding: 0.75rem 1rem;
-    /* Reduce padding */
+  padding: 0.75rem 1rem;
+  /* Reduce padding */
 }
 
 #referral-link {
-    font-size: 0.85rem;
-    /* Slightly smaller text for the link */
+  font-size: 0.85rem;
+  /* Slightly smaller text for the link */
 }
 
 #copy-referral-link {
-    padding: 0.5rem 1rem;
-    /* Make the copy button more compact */
-    font-size: 0.8rem;
-    /* Smaller text on the button */
+  padding: 0.5rem 1rem;
+  /* Make the copy button more compact */
+  font-size: 0.8rem;
+  /* Smaller text on the button */
 }
 
 /* Adjust "How It Works" section */
 .card.p-4.mb-6 {
-    padding: 1rem;
-    /* Reduce card padding */
+  padding: 1rem;
+  /* Reduce card padding */
 }
 
 .card.p-4.mb-6 h3 {
-    font-size: 1rem;
-    /* Slightly smaller heading */
-    margin-bottom: 0.75rem;
-    /* Reduce margin */
+  font-size: 1rem;
+  /* Slightly smaller heading */
+  margin-bottom: 0.75rem;
+  /* Reduce margin */
 }
 
 .grid.grid-cols-1.md\:grid-cols-3.gap-4 {
-    gap: 0.75rem;
-    /* Reduce gap between "How It Works" items */
+  gap: 0.75rem;
+  /* Reduce gap between "How It Works" items */
 }
 
 .text-center.p-4 {
-    padding: 0.5rem;
-    /* Reduce padding for each step */
+  padding: 0.5rem;
+  /* Reduce padding for each step */
 }
 
 .w-16.h-16 {
-    width: 3rem;
-    /* Make the number circles smaller */
-    height: 3rem;
-    margin-bottom: 0.75rem;
-    /* Adjust margin below circle */
+  width: 3rem;
+  /* Make the number circles smaller */
+  height: 3rem;
+  margin-bottom: 0.75rem;
+  /* Adjust margin below circle */
 }
 
 .w-16.h-16 span {
-    font-size: 1.25rem;
-    /* Smaller font for numbers */
+  font-size: 1.25rem;
+  /* Smaller font for numbers */
 }
 
 .text-text-secondary {
-    font-size: 0.8rem;
-    /* Smaller font for descriptive text */
+  font-size: 0.8rem;
+  /* Smaller font for descriptive text */
 }
 
 /* Adjust Referral History section */
 .card.p-4.text-text-secondary.text-center {
-    padding: 1rem;
-    /* Reduce padding */
+  padding: 1rem;
+  /* Reduce padding */
 }
 
 .card.p-4.text-text-secondary.text-center i {
-    font-size: 2.5rem;
-    /* Smaller icon */
-    margin-bottom: 0.75rem;
-    /* Less margin */
+  font-size: 2.5rem;
+  /* Smaller icon */
+  margin-bottom: 0.75rem;
+  /* Less margin */
 }
 
 .card.p-4.text-text-secondary.text-center p {
-    font-size: 0.85rem;
-    /* Smaller text */
+  font-size: 0.85rem;
+  /* Smaller text */
 }
 
 .icon-box {
-    background-color: var(--secondary);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(187, 134, 252, 0.1);
-    /* Accent color with transparency */
+  background-color: var(--secondary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(187, 134, 252, 0.1);
+  /* Accent color with transparency */
 }
 
 .icon-box:hover {
-    background-color: rgba(187, 134, 252, 0.1);
-    transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2);
+  background-color: rgba(187, 134, 252, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(187, 134, 252, 0.2);
 }
 
 .card {
-    background-color: rgba(26,
-            26,
-            26,
-            0.85);
-    /* Slightly transparent secondary black */
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    border: 1px solid rgba(187, 134, 252, 0.1);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    /* Darker shadow for contrast */
-    backdrop-filter: blur(5px);
+  background-color: rgba(26, 26, 26, 0.85);
+  /* Slightly transparent secondary black */
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(187, 134, 252, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  /* Darker shadow for contrast */
+  backdrop-filter: blur(5px);
 }
 
 .highlight-card {
-    background: linear-gradient(135deg,
-            rgba(0, 0, 0, 0.85),
-            /* Primary black with transparency */
-            rgba(26, 26, 26, 0.85),
-            /* Secondary black with transparency */
-            rgba(187, 134, 252, 0.2));
-    color: var(--text-primary);
-    border: none;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.85),
+    /* Primary black with transparency */ rgba(26, 26, 26, 0.85),
+    /* Secondary black with transparency */ rgba(187, 134, 252, 0.2)
+  );
+  color: var(--text-primary);
+  border: none;
 }
 
 .input-field {
-    background-color: rgba(26,
-            26,
-            26,
-            0.5);
-    /* Semi-transparent secondary black */
-    border: 1px solid rgba(187, 134, 252, 0.2);
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-    color: var(--text-primary);
-    width: 100%;
-    transition: all 0.3s ease;
+  background-color: rgba(26, 26, 26, 0.5);
+  /* Semi-transparent secondary black */
+  border: 1px solid rgba(187, 134, 252, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  width: 100%;
+  transition: all 0.3s ease;
 }
 
 .input-field:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.1);
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.1);
 }
 
 .amount-button {
-    background-color: rgba(26, 26, 26, 0.5);
-    border: 1px solid rgba(187, 134, 252, 0.2);
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    color: var(--text-primary);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  background-color: rgba(26, 26, 26, 0.5);
+  border: 1px solid rgba(187, 134, 252, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .amount-button:hover,
 .amount-button.active {
-    background-color: rgba(187, 134, 252, 0.1);
-    border-color: var(--accent);
-    color: var(--accent);
+  background-color: rgba(187, 134, 252, 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .submit-button {
-    background: linear-gradient(to right,
-            #000000,
-            #1a1a1a);
-    /* Gradient from primary to secondary black */
-    color: var(--accent);
-    border-radius: 0.75rem;
-    padding: 1rem;
-    width: 100%;
-    font-size: 1.125rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  background: linear-gradient(to right, #000000, #1a1a1a);
+  /* Gradient from primary to secondary black */
+  color: var(--accent);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  width: 100%;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .submit-button:hover {
-    background: linear-gradient(to right, #1a1a1a, #000000);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(187, 134, 252, 0.3);
+  background: linear-gradient(to right, #1a1a1a, #000000);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(187, 134, 252, 0.3);
 }
 
 .upload-box {
-    border: 2px dashed rgba(187, 134, 252, 0.3);
-    border-radius: 0.75rem;
-    padding: 2rem;
-    text-align: center;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background-color: rgba(26, 26, 26, 0.5);
+  border: 2px dashed rgba(187, 134, 252, 0.3);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: rgba(26, 26, 26, 0.5);
 }
 
 .upload-box:hover {
-    border-color: var(--accent);
-    background-color: rgba(187, 134, 252, 0.05);
+  border-color: var(--accent);
+  background-color: rgba(187, 134, 252, 0.05);
 }
 
 .my-product-card {
-    background-color: rgba(26, 26, 26, 0.85);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    border: 1px solid var(--accent);
+  background-color: rgba(26, 26, 26, 0.85);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--accent);
 }
 
 .nav-active {
-    color: var(--accent);
+  color: var(--accent);
+}
+
+#products-section {
+  display: block !important;
+  opacity: 1 !important;
+  z-index: 99999 !important;
+}
+/* Product Details Modal Styling */
+#product-details-modal .modal-content,
+#product-details-modal > div {
+  background: rgba(26, 26, 26, 0.95); /* Match .card background */
+  color: var(--text-primary);
+  border-radius: 0.75rem;
+  border: 1px solid var(--accent);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 2rem 1.5rem;
+  max-width: 400px;
+  width: 100%;
+}
+
+#product-details-modal h2,
+#modal-product-name {
+  color: var(--accent);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+#product-details-modal .text-gray-700,
+#product-details-modal p,
+#product-details-modal span {
+  color: var(--text-secondary) !important;
+}
+
+#product-details-modal .font-semibold {
+  color: var(--accent) !important;
+}
+
+#product-details-modal .text-xl,
+#product-details-modal .text-lg,
+#product-details-modal .font-bold {
+  color: var(--text-primary) !important;
+}
+
+#close-product-modal {
+  color: var(--accent) !important;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+#close-product-modal:hover {
+  color: #fff !important;
+}
+
+#product-details-modal .mb-2 {
+  margin-bottom: 0.75rem;
+}
+
+#product-details-modal .mb-4 {
+  margin-bottom: 1.25rem;
 }
 
 .tab-active {
-    background-color: rgba(187, 134, 252, 0.1) !important;
-    color: var(--accent) !important;
+  background-color: rgba(187, 134, 252, 0.1) !important;
+  color: var(--accent) !important;
 }
 
 .product-card {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-    /* Darker shadow for hover */
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  /* Darker shadow for hover */
 }
 
 .pulse {
-    animation: pulse 2s infinite;
+  animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(187, 134, 252, 0.4);
-    }
+  0% {
+    box-shadow: 0 0 0 0 rgba(187, 134, 252, 0.4);
+  }
 
-    70% {
-        box-shadow: 0 0 0 10px rgba(187, 134, 252, 0);
-    }
+  70% {
+    box-shadow: 0 0 0 10px rgba(187, 134, 252, 0);
+  }
 
-    100% {
-        box-shadow: 0 0 0 0 rgba(187, 134, 252, 0);
-    }
+  100% {
+    box-shadow: 0 0 0 0 rgba(187, 134, 252, 0);
+  }
 }
 
 .toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: var(--secondary);
-    color: var(--accent);
-    padding: 15px 25px;
-    border-radius: 8px;
-    border-left: 4px solid var(--accent);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-    /* Darker shadow for toast */
-    transform: translateX(120%);
-    transition: transform 0.3s ease;
-    z-index: 1000;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--secondary);
+  color: var(--accent);
+  padding: 15px 25px;
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  /* Darker shadow for toast */
+  transform: translateX(120%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
 }
 
 .toast.show {
-    transform: translateX(0);
+  transform: translateX(0);
 }
 
 /* Solid navigation footer */
 nav {
-    background-color: var(--primary) !important;
-    border-top: 1px solid rgba(187, 134, 252, 0.3);
+  background-color: var(--primary) !important;
+  border-top: 1px solid rgba(187, 134, 252, 0.3);
 }
 
 /* Adjustments for background image */
 main {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .card,
 .icon-box,
 .highlight-card {
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }

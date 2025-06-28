@@ -1,702 +1,1022 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vertex</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  li
-  <link rel="stylesheet" href="/main/style.css" />
-  <!-- <script src="/main/script.js" defer></script> -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: "#18181b",
-            accent: "#a855f7",
-            secondary: "#23232a",
-          },
-          animation: {
-            "fade-in": "fadeIn 0.5s ease-in-out",
-            float: "float 3s ease-in-out infinite",
-            "pulse-slow": "pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-          },
-          keyframes: {
-            fadeIn: {
-              "0%": { opacity: "0" },
-              "100%": { opacity: "1" },
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vertex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    li
+    <link rel="stylesheet" href="/main/style.css" />
+    <!-- <script src="/main/script.js" defer></script> -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#18181b",
+              accent: "#a855f7",
+              secondary: "#23232a",
             },
-            float: {
-              "0%, 100%": { transform: "translateY(0)" },
-              "50%": { transform: "translateY(-5px)" },
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-in-out",
+              float: "float 3s ease-in-out infinite",
+              "pulse-slow": "pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-5px)" },
+              },
             },
           },
         },
-      },
-    };
-  </script>
-</head>
+      };
+    </script>
+  </head>
 
-<body class="min-h-screen flex flex-col">
-  <!-- Toast Notification -->
-  <div id="toast" class="toast">
-    <div class="flex items-center">
-      <i class="fas fa-check-circle mr-2"></i>
-      <span id="toast-message">Operation completed successfully!</span>
-    </div>
-  </div>
-
-  <header class="p-4 flex items-center justify-between">
-    <div class="flex items-center space-x-2 animate-fade-in">
-      <div
-        class="w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-purple-glow hover:scale-110 transition-transform duration-300">
-        <i class="fas fa-wave-square text-primary text-xl"></i>
-      </div>
-      <span class="text-lg font-semibold text-accent">Vertex</span>
-    </div>
-    <div class="flex items-center space-x-4">
-      <div class="relative group">
-        <!-- Clickable user icon with mobile-visible background -->
-        <div class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 md:bg-transparent">
-          <i id="user-menu-button" class="fas fa-user-circle text-2xl text-accent cursor-pointer"></i>
-        </div>
-        <!-- Dropdown menu (hidden by default) -->
-        <div id="user-menu"
-          class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 hidden z-50 border border-gray-200 dark:border-gray-600">
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 menu-item"
-            data-target="profile-settings-page">Profile Settings</a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 menu-item"
-            data-target="security-page">Security</a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 menu-item"
-            data-target="logout-action">Logout</a>
-        </div>
-      </div>
-
-      <!-- Notification icon with mobile-visible background -->
-      <div class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 md:bg-transparent">
-        <i class="fas fa-bell text-2xl text-accent cursor-pointer"></i>
+  <body class="min-h-screen flex flex-col">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toast-message">Operation completed successfully!</span>
       </div>
     </div>
-  </header>
 
-  <div id="security-page" class="page-section hidden p-6">
-    <div class="flex items-center mb-6">
-      <button id="back-to-dashboard-from-security" class="text-text-secondary mr-4">
-        <i class="fas fa-arrow-left text-xl"></i>
-      </button>
-      <h2 class="text-xl font-semibold flex-grow text-center">Security</h2>
-    </div>
+    <header class="p-4 flex items-center justify-between">
+      <div class="flex items-center space-x-2 animate-fade-in">
+        <div
+          class="w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-purple-glow hover:scale-110 transition-transform duration-300"
+        >
+          <i class="fas fa-wave-square text-primary text-xl"></i>
+        </div>
+        <span class="text-lg font-semibold text-accent">Vertex</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="relative group">
+          <!-- Clickable user icon with mobile-visible background -->
+          <div
+            class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 md:bg-transparent"
+          >
+            <i
+              id="user-menu-button"
+              class="fas fa-user-circle text-2xl text-accent cursor-pointer"
+            ></i>
+          </div>
+          <!-- Dropdown menu (hidden by default) -->
+          <div
+            id="user-menu"
+            class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 hidden z-50 border border-gray-200 dark:border-gray-600"
+          >
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 menu-item"
+              data-target="profile-settings-page"
+              >Profile Settings</a
+            >
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 menu-item"
+              data-target="security-page"
+              >Security</a
+            >
+            <a
+              href="#"
+              id="logout-link"
+              class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 menu-item"
+              data-target="logout-action"
+              >Logout</a
+            >
+          </div>
+        </div>
 
-    <div class="card p-6 mb-6">
-      <h3 class="text-lg font-semibold mb-4">Change Password</h3>
-      <form>
-        <div class="mb-4">
-          <label for="current-password" class="block text-text-secondary text-sm mb-2">Current Password</label>
-          <input type="password" id="current-password" class="input-field" />
+        <!-- Notification icon with mobile-visible background -->
+        <div class="relative">
+          <div
+            class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 md:bg-transparent cursor-pointer"
+            id="notification-bell"
+          >
+            <i class="fas fa-bell text-2xl text-accent"></i>
+            <span
+              id="notification-count"
+              class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1 hidden"
+              >0</span
+            >
+          </div>
+          <!-- Notification Dropdown -->
+          <div
+            id="notification-dropdown"
+            class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-md shadow-lg py-2 hidden z-50 border border-gray-200 dark:border-gray-600"
+          >
+            <h4 class="px-4 py-2 font-semibold text-accent">Notifications</h4>
+            <div id="notification-list" class="max-h-60 overflow-y-auto">
+              <div class="px-4 py-2 text-text-secondary text-sm">
+                No notifications yet.
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="mb-4">
-          <label for="new-password" class="block text-text-secondary text-sm mb-2">New Password</label>
-          <input type="password" id="new-password" class="input-field" />
-        </div>
-        <div class="mb-4">
-          <label for="confirm-new-password" class="block text-text-secondary text-sm mb-2">Confirm New Password</label>
-          <input type="password" id="confirm-new-password" class="input-field" />
-        </div>
-        <button type="submit" class="submit-button w-full">
-          Update Password
+      </div>
+    </header>
+
+    <div id="security-page" class="page-section hidden p-6">
+      <div class="flex items-center mb-6">
+        <button
+          id="back-to-dashboard-from-security"
+          class="text-text-secondary mr-4"
+        >
+          <i class="fas fa-arrow-left text-xl"></i>
         </button>
-      </form>
-    </div>
+        <h2 class="text-xl font-semibold flex-grow text-center">Security</h2>
+      </div>
 
-    <div class="card p-6 mb-6">
-      <h3 class="text-lg font-semibold mb-4">
-        Two-Factor Authentication (2FA)
-      </h3>
-      <p class="text-text-secondary mb-4">
-        Add an extra layer of security to your account.
-      </p>
-      <div class="flex items-center justify-between">
-        <span class="text-base font-medium">2FA Status:</span>
-        <span id="2fa-status" class="font-bold text-red-500">Disabled</span>
-        <button id="toggle-2fa" class="submit-button px-4 py-2 text-sm ml-4">
-          Enable 2FA
-        </button>
+      <div class="card p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Change Password</h3>
+        <form>
+          <div class="mb-4">
+            <label
+              for="current-password"
+              class="block text-text-secondary text-sm mb-2"
+              >Current Password</label
+            >
+            <input type="password" id="current-password" class="input-field" />
+          </div>
+          <div class="mb-4">
+            <label
+              for="new-password"
+              class="block text-text-secondary text-sm mb-2"
+              >New Password</label
+            >
+            <input type="password" id="new-password" class="input-field" />
+          </div>
+          <div class="mb-4">
+            <label
+              for="confirm-new-password"
+              class="block text-text-secondary text-sm mb-2"
+              >Confirm New Password</label
+            >
+            <input
+              type="password"
+              id="confirm-new-password"
+              class="input-field"
+            />
+          </div>
+          <button type="submit" class="submit-button w-full">
+            Update Password
+          </button>
+        </form>
+      </div>
+
+      <div class="card p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">
+          Two-Factor Authentication (2FA)
+        </h3>
+        <p class="text-text-secondary mb-4">
+          Add an extra layer of security to your account.
+        </p>
+        <div class="flex items-center justify-between">
+          <span class="text-base font-medium">2FA Status:</span>
+          <span id="2fa-status" class="font-bold text-red-500">Disabled</span>
+          <button id="toggle-2fa" class="submit-button px-4 py-2 text-sm ml-4">
+            Enable 2FA
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <main class="flex-grow p-4 md:p-8">
-    <% if (user && user.username) { %>
+    <main class="flex-grow p-4 md:p-8">
+      <% if (user && user.username) { %>
       <h2 class="text-2xl font-bold mb-4 text-center">
-        Welcome, <span class="text-accent">
-          <%= user.username %>
-        </span>!
+        Welcome, <span class="text-accent"> <%= user.username %> </span>!
       </h2>
       <% } %>
-        <div class="max-w-4xl mx-auto">
-          <!-- Dashboard Section -->
-          <div id="dashboard-section">
-            <section class="text-center mb-8">
-              <p class="text-text-secondary text-sm mb-2">Your Stable Balance</p>
-              <p class="text-4xl font-bold mb-4">
-                ₦<span id="balance">
-                  <%= balance %>
-                </span>
-              </p>
-              <p>Your bonus: <%= user ? user.bonus : 0 %>
-              </p>
-              <p>
-                Your referrals: <%= user ? referralCount : 0 %>
-              </p>
-              <div class="relative inline-block">
-                <button
-                  class="bg-secondary text-accent py-2 px-4 rounded-lg flex items-center space-x-2 border border-accent">
-                  <i class="fas fa-wallet text-accent"></i>
-                  <span>Stable account</span>
-                  <i class="fas fa-chevron-down text-xs ml-2"></i>
-                </button>
-              </div>
-            </section>
-
-            <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              <div id="deposit-button" class="icon-box cursor-pointer">
-                <i class="fas fa-money-bill-wave text-3xl mb-2 text-accent"></i>
-                <span>Deposit</span>
-              </div>
-              <div id="withdraw-button" class="icon-box cursor-pointer">
-                <i class="fas fa-exchange-alt text-3xl mb-2 text-accent"></i>
-                <span>Withdraw</span>
-              </div>
-              <div id="bank-button" class="icon-box cursor-pointer">
-                <i class="fas fa-university text-3xl mb-2 text-accent"></i>
-                <span>Bank</span>
-              </div>
-              <div id="products-button" class="icon-box cursor-pointer">
-                <i class="fas fa-box-open text-3xl mb-2 text-accent"></i>
-                <span>Products</span>
-              </div>
-              <div id="my-products-button" class="icon-box cursor-pointer">
-                <i class="fas fa-cube text-3xl mb-2 text-accent"></i>
-                <span>My Products</span>
-              </div>
-              <div id="invite-button" class="icon-box cursor-pointer">
-                <i class="fas fa-user-plus text-3xl mb-2 text-accent"></i>
-                <span>Invite</span>
-              </div>
-              <div class="icon-box">
-                <i class="fas fa-headset text-3xl mb-2 text-accent"></i>
-                <span>Support</span>
-              </div>
-              <div class="icon-box">
-                <i class="fas fa-history text-3xl mb-2 text-accent"></i>
-                <span>Transactions</span>
-              </div>
-            </section>
-
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
-              <div class="card">
-                <h3 class="text-lg font-semibold mb-2">
-                  Refer friends to Wealthwave
-                </h3>
-                <p class="text-text-secondary text-sm mb-4">
-                  Invite your friends and family to earn on Wealthwave and get 25%
-                  of their first purchase
-                </p>
-                <div class="flex justify-end">
-                  <div class="w-24 h-24 bg-secondary rounded-full flex items-center justify-center text-accent">
-                    <i class="fas fa-gift text-3xl"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="highlight-card">
-                <h3 class="text-lg font-semibold mb-2">High yield Products</h3>
-                <p class="text-text-secondary text-sm">
-                  Discover products with high returns. Start investing today!
-                  Invite your friends and family to earn on Wealthwave and also
-                  earn commisions.
-                </p>
-                <div class="flex justify-end">
-                  <div
-                    class="w-24 h-24 bg-accent bg-opacity-10 rounded-full flex items-center justify-center text-accent">
-                    <i class="fas fa-chart-line text-3xl"></i>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          <div id="deposit-section" class="hidden flex justify-center items-center py-8">
-            <section class="w-full max-w-md mx-auto px-4">
-              <div class="flex items-center mb-6">
-                <button id="back-to-dashboard-from-deposit" class="text-text-secondary mr-4">
-                  <i class="fas fa-arrow-left text-xl"></i>
-                </button>
-                <h2 class="text-xl font-semibold">Deposit</h2>
-              </div>
-
-              <div class="card mb-6">
-                <label for="deposit-amount" class="block text-text-secondary text-sm mb-2">Amount (NGN)</label>
-                <input type="number" id="deposit-amount" placeholder="₦0.00" name="amount"
-                  class="input-field text-2xl font-bold mb-4" />
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <button class="amount-button" data-amount="1000">₦1,000</button>
-                  <button class="amount-button" data-amount="5000">₦5,000</button>
-                  <button class="amount-button" data-amount="10000">
-                    ₦10,000
-                  </button>
-                  <button class="amount-button" data-amount="50000">
-                    ₦50,000
-                  </button>
-                </div>
-              </div>
-
-              <div class="card mb-6">
-                <h3 class="text-lg font-semibold mb-4">Our Bank Details</h3>
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-text-secondary">Bank:</span>
-                  <span class="font-semibold">PALMPAY</span>
-                </div>
-                <hr class="border-text-secondary my-2 opacity-20" />
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-text-secondary">Account Number:</span>
-                  <div class="flex items-center">
-                    <span class="font-semibold" id="account-number">8069648159</span>
-                    <button id="copy-account-number" class="text-text-secondary hover:text-accent ml-2">
-                      <i class="fas fa-copy"></i>
-                    </button>
-                  </div>
-                </div>
-                <hr class="border-text-secondary my-2 opacity-20" />
-                <div class="flex justify-between items-center">
-                  <span class="text-text-secondary">Account Name:</span>
-                  <span class="font-semibold">ARINZE VICTOR AZUKA</span>
-                </div>
-              </div>
-
-              <div class="card mb-6">
-                <h3 class="text-lg font-semibold mb-4">How To Deposit</h3>
-                <ul class="list-disc list-inside text-text-secondary space-y-2">
-                  <li>
-                    Transfer exact amount entered into the account details above.
-                  </li>
-                  <li>
-                    After transfer, fill in transfer details
-                    <ul class="list-circle list-inside ml-4 mt-1">
-                      <li>The name of the bank used in making transfer.</li>
-                      <li>The name on the account used in making transfer.</li>
-                    </ul>
-                  </li>
-                  <li>Upload proof of payment (screenshot/receipt) - optional</li>
-                  <li>Click Submit Deposit Request to continue.</li>
-                </ul>
-              </div>
-
-              <div class="card mb-6">
-                <h3 class="text-lg font-semibold mb-4">Payment Details</h3>
-                <div class="mb-4">
-                  <label for="account-name-deposit" class="block text-text-secondary text-sm mb-2">Account Name</label>
-                  <input type="text" id="account-name-deposit" placeholder="As it appears on your bank"
-                    class="input-field" />
-                </div>
-                <div class="mb-4">
-                  <label for="bank-name-deposit" class="block text-text-secondary text-sm mb-2">Bank Name</label>
-                  <input type="text" id="bank-name-deposit" placeholder="Bank Name" class="input-field" />
-                </div>
-                <div class="upload-box flex flex-col items-center justify-center mb-6">
-                  <input type="file" id="proof-of-debit" class="hidden" accept=".png,.jpg,.pdf" />
-                  <label for="proof-of-debit" class="cursor-pointer">
-                    <i class="fas fa-cloud-upload-alt text-4xl mb-2 text-accent"></i>
-                    <p class="text-text-secondary">Proof of Debit (optional)</p>
-                    <p class="text-text-secondary text-sm">Click to upload</p>
-                    <p class="text-text-secondary text-xs">
-                      PNG, JPG, PDF (max 5MB)
-                    </p>
-                    <p id="file-name" class="text-accent text-sm mt-2 hidden"></p>
-                  </label>
-                </div>
-                <button id="submit-deposit" class="submit-button">
-                  Submit Deposit Request
-                </button>
-              </div>
-            </section>
-          </div>
-
-          <!-- Withdraw Section -->
-
-          <div id="withdraw-section" class="hidden flex justify-center items-center py-8">
-            <section class="w-full max-w-md mx-auto px-4 pb-8">
-              <div class="flex items-center mb-6">
-                <button id="back-to-dashboard-from-withdraw" class="text-text-secondary mr-4">
-                  <i class="fas fa-arrow-left text-xl"></i>
-                </button>
-                <h2 class="text-xl font-semibold">Withdraw Funds</h2>
-              </div>
-
-              <div class="card mb-6">
-                <label for="withdraw-amount" class="block text-text-secondary text-sm mb-2">Amount (NGN)</label>
-                <input type="number" id="withdraw-amount" placeholder="₦0.00"
-                  class="input-field text-2xl font-bold mb-4" />
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <button class="amount-button" data-amount="1000">₦1,000</button>
-                  <button class="amount-button" data-amount="5000">₦5,000</button>
-                  <button class="amount-button" data-amount="10000">
-                    ₦10,000
-                  </button>
-                  <button class="amount-button" data-amount="50000">
-                    ₦50,000
-                  </button>
-                </div>
-              </div>
-
-              <div class="card mb-6">
-                <h3 class="text-lg font-semibold mb-4">Select Bank Account</h3>
-                <div class="mb-4">
-                  <label for="select-bank-withdraw" class="block text-text-secondary text-sm mb-2">Bank Account</label>
-                  <div class="relative">
-                    <select id="select-bank-withdraw" class="input-field appearance-none pr-8 w-full">
-                      <option>Access Bank - ****1234</option>
-                      <option>Sterling Bank - ****5678</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <i class="fas fa-chevron-down text-text-secondary"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex justify-between items-center mt-4">
-                  <span class="text-text-secondary">Available Balance:</span>
-                  <span id="withdraw-balance" class="font-semibold">₦0.00</span>
-                </div>
-              </div>
-
-              <button id="submit-withdraw" class="submit-button">
-                Withdraw Funds
+      <div class="max-w-4xl mx-auto">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+          <section class="text-center mb-8">
+            <p class="text-text-secondary text-sm mb-2">Your Stable Balance</p>
+            <p class="text-4xl font-bold mb-4">
+              ₦<span id="balance"> <%= balance %> </span>
+            </p>
+            <p>Your bonus: <%= user ? user.bonus : 0 %></p>
+            <p>Your referrals: <%= user ? referralCount : 0 %></p>
+            <div class="relative inline-block">
+              <button
+                class="bg-secondary text-accent py-2 px-4 rounded-lg flex items-center space-x-2 border border-accent"
+              >
+                <i class="fas fa-wallet text-accent"></i>
+                <span>Stable account</span>
+                <i class="fas fa-chevron-down text-xs ml-2"></i>
               </button>
-            </section>
-          </div>
+            </div>
+          </section>
 
-          <div id="bank-section" class="hidden flex justify-center items-center py-8">
-            <section class="w-full max-w-md mx-auto px-4 pb-8">
-              <div class="flex items-center mb-6">
-                <button id="back-to-dashboard-from-bank" class="text-text-secondary mr-4">
-                  <i class="fas fa-arrow-left text-xl"></i>
+          <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            <div id="deposit-button" class="icon-box cursor-pointer">
+              <i class="fas fa-money-bill-wave text-3xl mb-2 text-accent"></i>
+              <span>Deposit</span>
+            </div>
+            <div id="withdraw-button" class="icon-box cursor-pointer">
+              <i class="fas fa-exchange-alt text-3xl mb-2 text-accent"></i>
+              <span>Withdraw</span>
+            </div>
+            <div id="bank-button" class="icon-box cursor-pointer">
+              <i class="fas fa-university text-3xl mb-2 text-accent"></i>
+              <span>Bank</span>
+            </div>
+            <div id="products-button" class="icon-box cursor-pointer">
+              <i class="fas fa-box-open text-3xl mb-2 text-accent"></i>
+              <span>Products</span>
+            </div>
+            <div id="my-products-button" class="icon-box cursor-pointer">
+              <i class="fas fa-cube text-3xl mb-2 text-accent"></i>
+              <span>My Products</span>
+            </div>
+            <div id="invite-button" class="icon-box cursor-pointer">
+              <i class="fas fa-user-plus text-3xl mb-2 text-accent"></i>
+              <span>Invite</span>
+            </div>
+            <div class="icon-box">
+              <i class="fas fa-headset text-3xl mb-2 text-accent"></i>
+              <span>Support</span>
+            </div>
+            <div class="icon-box">
+              <i class="fas fa-history text-3xl mb-2 text-accent"></i>
+              <span>Transactions</span>
+            </div>
+          </section>
+
+          <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-20">
+            <div class="card">
+              <h3 class="text-lg font-semibold mb-2">
+                Refer friends to Wealthwave
+              </h3>
+              <p class="text-text-secondary text-sm mb-4">
+                Invite your friends and family to earn on Wealthwave and get 25%
+                of their first purchase
+              </p>
+              <div class="flex justify-end">
+                <div
+                  class="w-24 h-24 bg-secondary rounded-full flex items-center justify-center text-accent"
+                >
+                  <i class="fas fa-gift text-3xl"></i>
+                </div>
+              </div>
+            </div>
+            <div class="highlight-card">
+              <h3 class="text-lg font-semibold mb-2">High yield Products</h3>
+              <p class="text-text-secondary text-sm">
+                Discover products with high returns. Start investing today!
+                Invite your friends and family to earn on Wealthwave and also
+                earn commisions.
+              </p>
+              <div class="flex justify-end">
+                <div
+                  class="w-24 h-24 bg-accent bg-opacity-10 rounded-full flex items-center justify-center text-accent"
+                >
+                  <i class="fas fa-chart-line text-3xl"></i>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div
+          id="deposit-section"
+          class="hidden flex justify-center items-center py-8"
+        >
+          <section class="w-full max-w-md mx-auto px-4">
+            <div class="flex items-center mb-6">
+              <button
+                id="back-to-dashboard-from-deposit"
+                class="text-text-secondary mr-4"
+              >
+                <i class="fas fa-arrow-left text-xl"></i>
+              </button>
+              <h2 class="text-xl font-semibold">Deposit</h2>
+            </div>
+
+            <div class="card mb-6">
+              <label
+                for="deposit-amount"
+                class="block text-text-secondary text-sm mb-2"
+                >Amount (NGN)</label
+              >
+              <input
+                type="number"
+                id="deposit-amount"
+                placeholder="₦0.00"
+                name="amount"
+                class="input-field text-2xl font-bold mb-4"
+              />
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button class="amount-button" data-amount="1000">₦1,000</button>
+                <button class="amount-button" data-amount="5000">₦5,000</button>
+                <button class="amount-button" data-amount="10000">
+                  ₦10,000
                 </button>
-                <h2 class="text-xl font-semibold">Bank Accounts</h2>
-              </div>
-
-              <div class="card mb-6">
-                <h3 class="text-lg font-semibold mb-4">My Bank Accounts</h3>
-
-                <div class="border border-accent rounded-lg p-4 mb-4">
-                  <div class="flex justify-between items-center mb-2">
-                    <span class="font-semibold">Access Bank</span>
-                    <span class="text-text-secondary">****1234</span>
-                  </div>
-                  <div class="text-text-secondary">John Doe</div>
-                  <div class="flex justify-end mt-2">
-                    <button class="text-red-500 text-sm hover:text-red-600 transition-colors">
-                      Remove
-                    </button>
-                  </div>
-                </div>
-
-                <div class="border border-accent rounded-lg p-4">
-                  <div class="flex justify-between items-center mb-2">
-                    <span class="font-semibold">Sterling Bank</span>
-                    <span class="text-text-secondary">****5678</span>
-                  </div>
-                  <div class="text-text-secondary">John Doe</div>
-                  <div class="flex justify-end mt-2">
-                    <button class="text-red-500 text-sm hover:text-red-600 transition-colors">
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card mb-6">
-                <h3 class="text-lg font-semibold mb-4">Add New Bank Account</h3>
-                <div class="mb-4">
-                  <label for="select-bank-bank" class="block text-text-secondary text-sm mb-2">Select Bank</label>
-                  <div class="relative">
-                    <select id="select-bank-bank" class="input-field appearance-none pr-8 w-full">
-                      <option>Access Bank</option>
-                      <option>Sterling Bank</option>
-                      <option>Zenith Bank</option>
-                      <option>GTBank</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                      <i class="fas fa-chevron-down text-text-secondary"></i>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-4">
-                  <label for="account-number-bank" class="block text-text-secondary text-sm mb-2">Account Number</label>
-                  <input type="number" id="account-number-bank" placeholder="Enter account number"
-                    class="input-field" />
-                </div>
-                <div class="mb-6">
-                  <label for="account-name-bank" class="block text-text-secondary text-sm mb-2">Account Name</label>
-                  <input type="text" id="account-name-bank" placeholder="Enter account name" class="input-field" />
-                </div>
-                <button id="add-bank-button" class="submit-button flex items-center justify-center space-x-2">
-                  <i class="fas fa-plus-circle"></i>
-                  <span>Add Bank Account</span>
+                <button class="amount-button" data-amount="50000">
+                  ₦50,000
                 </button>
               </div>
-            </section>
-          </div>
+            </div>
 
-          <!-- Products Section -->
-          <div id="products-section" class="hidden">
-            <section class="mb-8">
-              <div class="flex items-center mb-6">
-                <button id="back-to-dashboard-from-products" class="text-text-secondary mr-4">
-                  <i class="fas fa-arrow-left text-xl"></i>
-                </button>
-                <h2 class="text-xl font-semibold">Investment Plans</h2>
+            <div class="card mb-6">
+              <h3 class="text-lg font-semibold mb-4">Our Bank Details</h3>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-text-secondary">Bank:</span>
+                <span class="font-semibold">PALMPAY</span>
               </div>
-
-              <section class="p-4">
-                <div class="flex justify-around bg-[#1c1c1c] rounded-lg p-1 mb-6">
-                  <button id="stable-products-tab"
-                    class="flex-1 py-2 px-4 rounded-md text-sm font-medium bg-[#3b3b3b] text-white">
-                    Premium Plans
+              <hr class="border-text-secondary my-2 opacity-20" />
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-text-secondary">Account Number:</span>
+                <div class="flex items-center">
+                  <span class="font-semibold" id="account-number"
+                    >8069648159</span
+                  >
+                  <button
+                    id="copy-account-number"
+                    class="text-text-secondary hover:text-accent ml-2"
+                  >
+                    <i class="fas fa-copy"></i>
                   </button>
-                  <button id="welfare-products-tab"
-                    class="flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-400">
-                    Alpha Plans
-                  </button>
-                  <button id="wages-products-tab" class="flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-400">
-                    Wages Products
-                  </button>
-                </div>
-
-                <div id="stable-products-content">
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </div>
-
-                <div id="welfare-products-content" class="hidden">
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </div>
-
-                <div id="wages-products-content" class="hidden">
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                </div>
-              </section>
-
-              <div id="stable-products-content">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Product cards -->
                 </div>
               </div>
-
-              <div id="welfare-products-content" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Product cards -->
-                </div>
+              <hr class="border-text-secondary my-2 opacity-20" />
+              <div class="flex justify-between items-center">
+                <span class="text-text-secondary">Account Name:</span>
+                <span class="font-semibold">ARINZE VICTOR AZUKA</span>
               </div>
+            </div>
 
-              <div id="wages-products-content" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Product cards -->
-                </div>
+            <div class="card mb-6">
+              <h3 class="text-lg font-semibold mb-4">How To Deposit</h3>
+              <ul class="list-disc list-inside text-text-secondary space-y-2">
+                <li>
+                  Transfer exact amount entered into the account details above.
+                </li>
+                <li>
+                  After transfer, fill in transfer details
+                  <ul class="list-circle list-inside ml-4 mt-1">
+                    <li>The name of the bank used in making transfer.</li>
+                    <li>The name on the account used in making transfer.</li>
+                  </ul>
+                </li>
+                <li>Upload proof of payment (screenshot/receipt) - optional</li>
+                <li>Click Submit Deposit Request to continue.</li>
+              </ul>
+            </div>
+
+            <div class="card mb-6">
+              <h3 class="text-lg font-semibold mb-4">Payment Details</h3>
+              <div class="mb-4">
+                <label
+                  for="account-name-deposit"
+                  class="block text-text-secondary text-sm mb-2"
+                  >Account Name</label
+                >
+                <input
+                  type="text"
+                  id="account-name-deposit"
+                  placeholder="As it appears on your bank"
+                  class="input-field"
+                />
               </div>
-            </section>
-          </div>
+              <div class="mb-4">
+                <label
+                  for="bank-name-deposit"
+                  class="block text-text-secondary text-sm mb-2"
+                  >Bank Name</label
+                >
+                <input
+                  type="text"
+                  id="bank-name-deposit"
+                  placeholder="Bank Name"
+                  class="input-field"
+                />
+              </div>
+              <div
+                class="upload-box flex flex-col items-center justify-center mb-6"
+              >
+                <input
+                  type="file"
+                  id="proof-of-debit"
+                  class="hidden"
+                  accept=".png,.jpg,.pdf"
+                />
+                <label for="proof-of-debit" class="cursor-pointer">
+                  <i
+                    class="fas fa-cloud-upload-alt text-4xl mb-2 text-accent"
+                  ></i>
+                  <p class="text-text-secondary">Proof of Debit (optional)</p>
+                  <p class="text-text-secondary text-sm">Click to upload</p>
+                  <p class="text-text-secondary text-xs">
+                    PNG, JPG, PDF (max 5MB)
+                  </p>
+                  <p id="file-name" class="text-accent text-sm mt-2 hidden"></p>
+                </label>
+              </div>
+              <button id="submit-deposit" class="submit-button">
+                Submit Deposit Request
+              </button>
+            </div>
+          </section>
+        </div>
 
-          <!-- My Products Section -->
-          <div id="my-products-section" class="hidden">
-            <section class="mb-8">
-              <div class="flex items-center mb-6">
-                <button id="back-to-dashboard-from-my-products" class="text-text-secondary mr-4">
-                  <i class="fas fa-arrow-left text-xl"></i>
+        <!-- Withdraw Section -->
+
+        <div
+          id="withdraw-section"
+          class="hidden flex justify-center items-center py-8"
+        >
+          <section class="w-full max-w-md mx-auto px-4 pb-8">
+            <div class="flex items-center mb-6">
+              <button
+                id="back-to-dashboard-from-withdraw"
+                class="text-text-secondary mr-4"
+              >
+                <i class="fas fa-arrow-left text-xl"></i>
+              </button>
+              <h2 class="text-xl font-semibold">Withdraw Funds</h2>
+            </div>
+
+            <div class="card mb-6">
+              <label
+                for="withdraw-amount"
+                class="block text-text-secondary text-sm mb-2"
+                >Amount (NGN)</label
+              >
+              <input
+                type="number"
+                id="withdraw-amount"
+                placeholder="₦0.00"
+                class="input-field text-2xl font-bold mb-4"
+              />
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button class="amount-button" data-amount="1000">₦1,000</button>
+                <button class="amount-button" data-amount="5000">₦5,000</button>
+                <button class="amount-button" data-amount="10000">
+                  ₦10,000
                 </button>
-                <h2 class="text-xl font-semibold">My Investment Products</h2>
+                <button class="amount-button" data-amount="50000">
+                  ₦50,000
+                </button>
               </div>
+            </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                <div class="my-product-card flex flex-col justify-between">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-semibold">Total Products</h3>
-                    <i class="fas fa-chart-bar text-accent text-2xl"></i>
-                  </div>
-                  <p id="total-products" class="text-3xl font-bold">0</p>
-                </div>
-                <div class="my-product-card flex flex-col justify-between">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-semibold">premium plans</h3>
-                    <i class="fas fa-coins text-green-400 text-2xl"></i>
-                  </div>
-                  <p id="stable-products" class="text-3xl font-bold">0</p>
-                </div>
-                <div class="my-product-card flex flex-col justify-between">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-semibold">Alpha plans</h3>
-                    <i class="fas fa-hand-holding-heart text-blue-400 text-2xl"></i>
-                  </div>
-                  <p id="welfare-products" class="text-3xl font-bold">0</p>
-                </div>
-                <div class="my-product-card flex flex-col justify-between">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-semibold">Wages Products</h3>
-                    <i class="fas fa-money-check-alt text-yellow-400 text-2xl"></i>
-                  </div>
-                  <p id="wages-products" class="text-3xl font-bold">0</p>
-                </div>
-                <div class="my-product-card flex flex-col justify-between">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-semibold">Total Investment</h3>
-                    <i class="fas fa-wallet text-purple-400 text-2xl"></i>
-                  </div>
-                  <p id="total-investment" class="text-3xl font-bold">₦0.00</p>
-                </div>
-                <div class="my-product-card flex flex-col justify-between">
-                  <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-semibold">Total Returns</h3>
-                    <i class="fas fa-chart-line text-teal-400 text-2xl"></i>
-                  </div>
-                  <p id="total-returns" class="text-3xl font-bold">₦0.00</p>
-                </div>
-              </div>
-
-              <div class="mb-6">
-                <label for="filter-my-products" class="block text-text-secondary text-sm mb-2">Filter Products</label>
+            <div class="card mb-6">
+              <h3 class="text-lg font-semibold mb-4">Select Bank Account</h3>
+              <div class="mb-4">
+                <label
+                  for="select-bank-withdraw"
+                  class="block text-text-secondary text-sm mb-2"
+                  >Bank Account</label
+                >
                 <div class="relative">
-                  <select id="filter-my-products" class="input-field appearance-none pr-8">
-                    <option>All Products</option>
-                    <option>Active</option>
-                    <option>Completed</option>
-                    <option>Pending</option>
+                  <select
+                    id="select-bank-withdraw"
+                    class="input-field appearance-none pr-8 w-full"
+                  >
+                    <% if (user && user.banks && user.banks.length > 0) { %> <%
+                    user.banks.forEach(function(bank) { %>
+                    <option>
+                      <%= bank.bankName %> - ****<%=
+                      bank.accountNumber.slice(-4) %> (<%= bank.accountName %>)
+                    </option>
+                    <% }) %> <% } else { %>
+                    <option disabled selected>No bank accounts added</option>
+                    <% } %>
                   </select>
-                  <div class="relative -mt-8 mr-2 pointer-events-none flex justify-end">
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
+                  >
                     <i class="fas fa-chevron-down text-text-secondary"></i>
                   </div>
                 </div>
               </div>
-
-              <div class="card p-4 text-center">
-                <i class="fas fa-box-open text-4xl text-accent mb-4"></i>
-                <h3 class="text-lg font-semibold mb-2">No Active Investments</h3>
-                <p class="text-text-secondary mb-4">
-                  You haven't purchased any investment products yet.
-                </p>
-                <button id="explore-products" class="submit-button">
-                  Explore Products
-                </button>
+              <div class="flex justify-between items-center mt-4">
+                <span class="text-text-secondary">Available Balance:</span>
+                <span id="withdraw-balance" class="font-semibold">
+                  ₦<%= user && user.balance ? user.balance.toLocaleString() :
+                  "0.00" %>
+                  <span class="text-xs text-green-500 ml-2">
+                    (Bonus: ₦<%= user && user.bonus ?
+                    user.bonus.toLocaleString() : "0.00" %>)
+                  </span>
+                </span>
               </div>
-            </section>
-          </div>
+            </div>
 
-          <!-- Invites Section -->
-          <div id="invites-section" class="hidden">
-            <section class="mb-8">
-              <div class="flex items-center mb-6">
-                <button id="back-to-dashboard-from-invites" class="text-text-secondary mr-4">
-                  <i class="fas fa-arrow-left text-xl"></i>
-                </button>
-                <h2 class="text-xl font-semibold text-center flex-grow">
-                  Refer and Earn Rewards
-                </h2>
-              </div>
+            <button id="submit-withdraw" class="submit-button">
+              Withdraw Funds
+            </button>
+          </section>
+        </div>
 
-              <div class="flex justify-center mb-6">
-                <div
-                  class="w-48 h-48 bg-accent bg-opacity-10 rounded-full flex items-center justify-center text-accent">
-                  <i class="fas fa-user-friends text-6xl"></i>
+        <!-- bank list sections -->
+        <div
+          id="bank-section"
+          class="hidden flex justify-center items-center py-8"
+        >
+          <section class="w-full max-w-md mx-auto px-4 pb-8">
+            <!-- Back to Dashboard Button -->
+            <div class="flex items-center mb-6">
+              <button
+                id="back-to-dashboard-from-bank"
+                class="text-text-secondary mr-4"
+              >
+                <i class="fas fa-arrow-left text-xl"></i>
+              </button>
+              <h2 class="text-xl font-semibold">Bank Accounts</h2>
+            </div>
+
+            <!-- List of Bank Accounts -->
+            <div class="card mb-6">
+              <h3 class="text-lg font-semibold mb-4">My Bank Accounts</h3>
+              <% if (user && user.banks && user.banks.length > 0) { %> <%
+              user.banks.forEach(function(bank) { %>
+              <div
+                class="border border-accent rounded-lg p-4 mb-4 bank-account-row"
+                data-account-number="<%= bank.accountNumber %>"
+              >
+                <div class="flex justify-between items-center mb-2">
+                  <span class="font-semibold"><%= bank.bankName %></span>
+                  <span class="text-text-secondary"
+                    >****<%= bank.accountNumber %></span
+                  >
+                </div>
+                <div class="text-text-secondary"><%= bank.accountName %></div>
+                <div class="flex justify-end mt-2">
+                  <button
+                    class="remove-bank-btn text-red-500 text-sm hover:text-red-600 transition-colors"
+                    data-account-number="<%= bank.accountNumber %>"
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
+              <% }) %> <% } else { %>
+              <div class="text-text-secondary">No bank accounts added yet.</div>
+              <% } %>
+            </div>
 
-              <div class="card mb-6 flex items-center justify-between p-3 rounded-lg" style="
-                background-color: var(--secondary);
-                border: 1px solid var(--accent);
-              ">
-                <span id="referral-link"
-                  class="text-sm font-medium overflow-hidden whitespace-nowrap overflow-ellipsis">https://wealth-wave-investment.int.ng/ref/yourusername</span>
-                <button id="copy-referral-link"
-                  class="bg-primary text-accent px-4 py-2 rounded-md text-sm ml-4 flex-shrink-0 border border-accent">
-                  COPY
-                </button>
-              </div>
-
-              <div class="card p-4 mb-6">
-                <h3 class="text-lg font-semibold mb-4">How It Works</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div class="text-center p-4">
-                    <div
-                      class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span class="text-accent text-2xl font-bold">1</span>
-                    </div>
-                    <p class="text-text-secondary">
-                      Share your referral link with friends
-                    </p>
-                  </div>
-                  <div class="text-center p-4">
-                    <div
-                      class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span class="text-accent text-2xl font-bold">2</span>
-                    </div>
-                    <p class="text-text-secondary">
-                      They sign up using your link
-                    </p>
-                  </div>
-                  <div class="text-center p-4">
-                    <div
-                      class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span class="text-accent text-2xl font-bold">3</span>
-                    </div>
-                    <p class="text-text-secondary">
-                      Earn 25% of their first purchase
-                    </p>
+            <!-- Add New Bank Account Form -->
+            <div class="card mb-6">
+              <h3 class="text-lg font-semibold mb-4">Add New Bank Account</h3>
+              <div class="mb-4">
+                <label
+                  for="select-bank-bank"
+                  class="block text-text-secondary text-sm mb-2"
+                  >Select Bank</label
+                >
+                <div class="relative">
+                  <select
+                    id="select-bank-bank"
+                    class="input-field appearance-none pr-8 w-full"
+                  >
+                    <option>Access Bank</option>
+                    <option>Sterling Bank</option>
+                    <option>Zenith Bank</option>
+                    <option>GTBank</option>
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
+                  >
+                    <i class="fas fa-chevron-down text-text-secondary"></i>
                   </div>
                 </div>
               </div>
+              <div class="mb-4">
+                <label
+                  for="account-number-bank"
+                  class="block text-text-secondary text-sm mb-2"
+                  >Account Number</label
+                >
+                <input
+                  type="number"
+                  id="account-number-bank"
+                  placeholder="Enter account number"
+                  class="input-field"
+                />
+              </div>
+              <div class="mb-6">
+                <label
+                  for="account-name-bank"
+                  class="block text-text-secondary text-sm mb-2"
+                  >Account Name</label
+                >
+                <input
+                  type="text"
+                  id="account-name-bank"
+                  placeholder="Enter account name"
+                  class="input-field"
+                />
+              </div>
+              <button
+                id="add-bank-button"
+                class="submit-button flex items-center justify-center space-x-2"
+              >
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Bank Account</span>
+              </button>
+            </div>
+          </section>
+        </div>
 
-              <h3 class="text-xl font-semibold mb-4">Referral History</h3>
-              <div class="card p-4 text-text-secondary text-center">
-                <i class="fas fa-history text-4xl mb-4 text-accent"></i>
-                <p>No referral history available yet.</p>
-                <p class="mt-2">Start sharing your link to earn rewards!</p>
+        <!-- Products Section -->
+        <div id="products-section" hidden>
+          <section class="mb-8">
+            <div class="flex items-center mb-6">
+              <button
+                id="back-to-dashboard-from-products"
+                class="text-text-secondary mr-4"
+              >
+                <i class="fas fa-arrow-left text-xl"></i>
+              </button>
+              <h2 class="text-xl font-semibold">Investment Plans</h2>
+            </div>
+
+            <section class="p-4">
+              <div class="flex justify-around bg-[#1c1c1c] rounded-lg p-1 mb-6">
+                <button
+                  id="stable-products-tab"
+                  class="flex-1 py-2 px-4 rounded-md text-sm font-medium bg-[#3b3b3b] text-white"
+                >
+                  Premium Plans
+                </button>
+                <button
+                  id="welfare-products-tab"
+                  class="flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-400"
+                >
+                  Alpha Plans
+                </button>
+                <button
+                  id="wages-products-tab"
+                  class="flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-400"
+                >
+                  Wages Products
+                </button>
+              </div>
+
+              <!-- Only ONE of each tab content below! -->
+              <div id="stable-products-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <% products.filter(p => p.category ===
+                  'premium').forEach(function(product) { %>
+                  <div class="card p-4">
+                    <h4 class="font-bold mb-2"><%= product.name %></h4>
+                    <p class="mb-2"><%= product.description %></p>
+                    <div class="mb-2">Price: ₦<%= product.price %></div>
+                    <div class="mb-2">
+                      Total Return: ₦<%= product.totalReturn %>
+                    </div>
+                    <div class="mb-2">
+                      Daily Return: ₦<%= product.dailyReturn %>
+                    </div>
+                    <div class="mb-2">Duration: <%= product.duration %></div>
+                    <button
+                      class="details-btn bg-accent text-white px-4 py-2 rounded mt-2"
+                      data-product-id="<%= product._id %>"
+                    >
+                      Details
+                    </button>
+                  </div>
+                  <% }) %>
+                </div>
+              </div>
+              <div id="welfare-products-content" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <% products.filter(p => p.category ===
+                  'alpha').forEach(function(product) { %>
+                  <div class="card p-4">
+                    <h4 class="font-bold mb-2"><%= product.name %></h4>
+                    <p class="mb-2"><%= product.description %></p>
+                    <div class="mb-2">Price: ₦<%= product.price %></div>
+                    <div class="mb-2">
+                      Total Return: ₦<%= product.totalReturn %>
+                    </div>
+                    <div class="mb-2">
+                      Daily Return: ₦<%= product.dailyReturn %>
+                    </div>
+                    <div class="mb-2">Duration: <%= product.duration %></div>
+                    <button
+                      class="details-btn bg-accent text-white px-4 py-2 rounded mt-2"
+                      data-product-id="<%= product._id %>"
+                    >
+                      Details
+                    </button>
+                  </div>
+                  <% }) %>
+                </div>
+              </div>
+              <div id="wages-products-content" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <% products.filter(p => p.category ===
+                  'wages').forEach(function(product) { %>
+                  <div class="card p-4">
+                    <h4 class="font-bold mb-2"><%= product.name %></h4>
+                    <p class="mb-2"><%= product.description %></p>
+                    <div class="mb-2">Price: ₦<%= product.price %></div>
+                    <div class="mb-2">
+                      Total Return: ₦<%= product.totalReturn %>
+                    </div>
+                    <div class="mb-2">
+                      Daily Return: ₦<%= product.dailyReturn %>
+                    </div>
+                    <div class="mb-2">Duration: <%= product.duration %></div>
+                    <button
+                      class="details-btn bg-accent text-white px-4 py-2 rounded mt-2"
+                      data-product-id="<%= product._id %>"
+                    >
+                      Details
+                    </button>
+                  </div>
+                  <% }) %>
+                </div>
               </div>
             </section>
+          </section>
+        </div>
+
+        <!-- Product Details Modal -->
+        <div
+          id="product-details-modal"
+          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+        >
+          <div
+            class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative"
+          >
+            <button
+              id="close-product-modal"
+              class="absolute top-2 right-2 text-gray-400 hover:text-accent text-2xl"
+            >
+              &times;
+            </button>
+            <h2 id="modal-product-name" class="text-xl font-bold mb-2"></h2>
+            <p id="modal-product-description" class="mb-4 text-gray-700"></p>
+            <div class="mb-2">
+              <span class="font-semibold">Price:</span> ₦<span
+                id="modal-product-price"
+              ></span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Total Return:</span> ₦<span
+                id="modal-product-total-return"
+              ></span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Daily Return:</span> ₦<span
+                id="modal-product-daily-return"
+              ></span>
+            </div>
+            <div class="mb-2">
+              <span class="font-semibold">Duration:</span>
+              <span id="modal-product-duration"></span>
+            </div>
           </div>
         </div>
-  </main>
 
-  <div class="fixed bottom-28 right-4 z-50">
-    <a href="https://t.me/VERTEX_INNOVATIONS">
-      <button class="bg-accent text-primary rounded-full p-4 shadow-lg flex items-center justify-center pulse">
-        <i class="fab fa-telegram-plane text-2xl"></i>
-      </button>
-    </a>
-  </div>
+        <!-- My Products Section -->
+        <div id="my-products-section" class="hidden">
+          <section class="mb-8">
+            <div class="flex items-center mb-6">
+              <button
+                id="back-to-dashboard-from-my-products"
+                class="text-text-secondary mr-4"
+              >
+                <i class="fas fa-arrow-left text-xl"></i>
+              </button>
+              <h2 class="text-xl font-semibold">My Investment Products</h2>
+            </div>
 
-  <nav class="fixed bottom-0 left-0 right-0 text-white p-4 flex justify-around items-center z-40">
-    <div class="flex flex-col items-center nav-active">
-      <i class="fas fa-home text-xl mb-1"></i>
-      <span class="text-xs">Home</span>
-    </div>
-    <div class="flex flex-col items-center text-text-secondary">
-      <i class="fas fa-receipt text-xl mb-1"></i>
-      <span class="text-xs">Transactions</span>
-    </div>
-    <div id="show-products-list" class="flex flex-col items-center text-text-secondary cursor-pointer">
-      <i class="fas fa-box-open text-xl mb-1"></i>
-      <span class="text-xs">Products</span>
-    </div>
-    <a href="/profile">
-      <div class="flex flex-col items-center text-text-secondary">
-        <i class="fas fa-user text-xl mb-1"></i>
-        <span class="text-xs">Profile</span>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6"
+            >
+              <div class="my-product-card flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="text-lg font-semibold">Total Products</h3>
+                  <i class="fas fa-chart-bar text-accent text-2xl"></i>
+                </div>
+                <p id="total-products" class="text-3xl font-bold">0</p>
+              </div>
+              <div class="my-product-card flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="text-lg font-semibold">premium plans</h3>
+                  <i class="fas fa-coins text-green-400 text-2xl"></i>
+                </div>
+                <p id="stable-products" class="text-3xl font-bold">0</p>
+              </div>
+              <div class="my-product-card flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="text-lg font-semibold">Alpha plans</h3>
+                  <i
+                    class="fas fa-hand-holding-heart text-blue-400 text-2xl"
+                  ></i>
+                </div>
+                <p id="welfare-products" class="text-3xl font-bold">0</p>
+              </div>
+              <div class="my-product-card flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="text-lg font-semibold">Wages Products</h3>
+                  <i
+                    class="fas fa-money-check-alt text-yellow-400 text-2xl"
+                  ></i>
+                </div>
+                <p id="wages-products" class="text-3xl font-bold">0</p>
+              </div>
+              <div class="my-product-card flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="text-lg font-semibold">Total Investment</h3>
+                  <i class="fas fa-wallet text-purple-400 text-2xl"></i>
+                </div>
+                <p id="total-investment" class="text-3xl font-bold">₦0.00</p>
+              </div>
+              <div class="my-product-card flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="text-lg font-semibold">Total Returns</h3>
+                  <i class="fas fa-chart-line text-teal-400 text-2xl"></i>
+                </div>
+                <p id="total-returns" class="text-3xl font-bold">₦0.00</p>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label
+                for="filter-my-products"
+                class="block text-text-secondary text-sm mb-2"
+                >Filter Products</label
+              >
+              <div class="relative">
+                <select
+                  id="filter-my-products"
+                  class="input-field appearance-none pr-8"
+                >
+                  <option>All Products</option>
+                  <option>Active</option>
+                  <option>Completed</option>
+                  <option>Pending</option>
+                </select>
+                <div
+                  class="relative -mt-8 mr-2 pointer-events-none flex justify-end"
+                >
+                  <i class="fas fa-chevron-down text-text-secondary"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="card p-4 text-center">
+              <i class="fas fa-box-open text-4xl text-accent mb-4"></i>
+              <h3 class="text-lg font-semibold mb-2">No Active Investments</h3>
+              <p class="text-text-secondary mb-4">
+                You haven't purchased any investment products yet.
+              </p>
+              <button id="explore-products" class="submit-button">
+                Explore Products
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Invites Section -->
+        <div id="invites-section" class="hidden">
+          <section class="mb-8">
+            <div class="flex items-center mb-6">
+              <button
+                id="back-to-dashboard-from-invites"
+                class="text-text-secondary mr-4"
+              >
+                <i class="fas fa-arrow-left text-xl"></i>
+              </button>
+              <h2 class="text-xl font-semibold text-center flex-grow">
+                Refer and Earn Rewards
+              </h2>
+            </div>
+
+            <div class="flex justify-center mb-6">
+              <div
+                class="w-48 h-48 bg-accent bg-opacity-10 rounded-full flex items-center justify-center text-accent"
+              >
+                <i class="fas fa-user-friends text-6xl"></i>
+              </div>
+            </div>
+
+            <div
+              class="card mb-6 flex items-center justify-between p-3 rounded-lg"
+              style="
+                background-color: var(--secondary);
+                border: 1px solid var(--accent);
+              "
+            >
+              <span
+                id="referral-link"
+                class="text-sm font-medium overflow-hidden whitespace-nowrap overflow-ellipsis"
+                >https://wealth-wave-investment.int.ng/ref/yourusername</span
+              >
+              <button
+                id="copy-referral-link"
+                class="bg-primary text-accent px-4 py-2 rounded-md text-sm ml-4 flex-shrink-0 border border-accent"
+              >
+                COPY
+              </button>
+            </div>
+
+            <div class="card p-4 mb-6">
+              <h3 class="text-lg font-semibold mb-4">How It Works</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="text-center p-4">
+                  <div
+                    class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4"
+                  >
+                    <span class="text-accent text-2xl font-bold">1</span>
+                  </div>
+                  <p class="text-text-secondary">
+                    Share your referral link with friends
+                  </p>
+                </div>
+                <div class="text-center p-4">
+                  <div
+                    class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4"
+                  >
+                    <span class="text-accent text-2xl font-bold">2</span>
+                  </div>
+                  <p class="text-text-secondary">
+                    They sign up using your link
+                  </p>
+                </div>
+                <div class="text-center p-4">
+                  <div
+                    class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4"
+                  >
+                    <span class="text-accent text-2xl font-bold">3</span>
+                  </div>
+                  <p class="text-text-secondary">
+                    Earn 25% of their first purchase
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-4">Referral History</h3>
+            <div class="card p-4 text-text-secondary text-center">
+              <i class="fas fa-history text-4xl mb-4 text-accent"></i>
+              <p>No referral history available yet.</p>
+              <p class="mt-2">Start sharing your link to earn rewards!</p>
+            </div>
+          </section>
+        </div>
       </div>
-    </a>
-  </nav>
+    </main>
 
-  <div id="purchased-products-section" class="hidden max-w-2xl mx-auto my-8 bg-white rounded-lg shadow p-6">
-    <h2 class="text-xl font-semibold mb-4">My Purchased Products</h2>
-    <% if (transactions && transactions.length> 0) { %>
+    <div class="fixed bottom-28 right-4 z-50">
+      <a href="https://t.me/VERTEX_INNOVATIONS">
+        <button
+          class="bg-accent text-primary rounded-full p-4 shadow-lg flex items-center justify-center pulse"
+        >
+          <i class="fab fa-telegram-plane text-2xl"></i>
+        </button>
+      </a>
+    </div>
+
+    <nav
+      class="fixed bottom-0 left-0 right-0 text-white p-4 flex justify-around items-center z-40"
+    >
+      <div class="flex flex-col items-center nav-active">
+        <i class="fas fa-home text-xl mb-1"></i>
+        <span class="text-xs">Home</span>
+      </div>
+      <div class="flex flex-col items-center text-text-secondary">
+        <i class="fas fa-receipt text-xl mb-1"></i>
+        <span class="text-xs">Transactions</span>
+      </div>
+      <div
+        id="show-products-list"
+        class="flex flex-col items-center text-text-secondary cursor-pointer"
+      >
+        <i class="fas fa-box-open text-xl mb-1"></i>
+        <span class="text-xs">Products</span>
+      </div>
+      <a href="/profile">
+        <div class="flex flex-col items-center text-text-secondary">
+          <i class="fas fa-user text-xl mb-1"></i>
+          <span class="text-xs">Profile</span>
+        </div>
+      </a>
+    </nav>
+
+    <div
+      id="purchased-products-section"
+      class="hidden max-w-2xl mx-auto my-8 bg-white rounded-lg shadow p-6"
+    >
+      <h2 class="text-xl font-semibold mb-4">My Purchased Products</h2>
+      <% if (transactions && transactions.length> 0) { %>
       <table class="min-w-full bg-white border rounded">
         <thead>
           <tr class="bg-gray-100 text-gray-700">
@@ -708,37 +1028,85 @@
         </thead>
         <tbody>
           <% transactions.forEach(purchase=> { %>
-            <tr class="border-b">
-              <td class="px-4 py-2">
-                <%= purchase.product ? purchase.product.name : 'N/A' %>
-              </td>
-              <td class="px-4 py-2">
-                <%= purchase.quantity %>
-              </td>
-              <td class="px-4 py-2">
-                <%= purchase.purchasedAt ? purchase.purchasedAt.toLocaleDateString() : 'N/A' %>
-              </td>
-              <td class="px-4 py-2">
-                <%= purchase.status || 'Completed' %>
-              </td>
-            </tr>
-            <% }) %>
+          <tr class="border-b">
+            <td class="px-4 py-2">
+              <%= purchase.product ? purchase.product.name : 'N/A' %>
+            </td>
+            <td class="px-4 py-2"><%= purchase.quantity %></td>
+            <td class="px-4 py-2">
+              <%= purchase.purchasedAt ?
+              purchase.purchasedAt.toLocaleDateString() : 'N/A' %>
+            </td>
+            <td class="px-4 py-2"><%= purchase.status || 'Completed' %></td>
+          </tr>
+          <% }) %>
         </tbody>
       </table>
       <% } else { %>
-        <p class="text-gray-500">You have not purchased any products yet.</p>
-        <% } %>
-          <button id="close-products-list"
-            class="mt-6 px-4 py-2 bg-accent text-white rounded hover:bg-primary">Close</button>
-  </div>
+      <p class="text-gray-500">You have not purchased any products yet.</p>
+      <% } %>
+      <button
+        id="close-products-list"
+        class="mt-6 px-4 py-2 bg-accent text-white rounded hover:bg-primary"
+      >
+        Close
+      </button>
+    </div>
 
-  <!-- <pre><%= JSON.stringify(user, null, 2) %></pre> -->
+    <!-- <pre><%= JSON.stringify(user, null, 2) %></pre> -->
 
-  <script>
-    window.currentUser = <% - JSON.stringify(user) %>;
-    console.log("Current User:", window.currentUser);
-  </script>
-  <script src="/main/script.js" defer></script>
-</body>
+    <script>
+          window.products = <%- JSON.stringify(products) %>;
+          window.currentUser = <%- JSON.stringify(user) %>;
+          console.log("Products from backend:", window.products);
+          console.log("Current User:", window.currentUser);
 
+          document.addEventListener("DOMContentLoaded", function () {
+            // Debug: Log all .details-btn buttons
+            console.log("Details buttons found:", document.querySelectorAll(".details-btn"));
+
+            document.body.addEventListener("click", function (e) {
+              const detailsBtn = e.target.closest(".details-btn");
+              if (detailsBtn) {
+                const productId = detailsBtn.getAttribute("data-product-id");
+                console.log("Details button clicked. Product ID:", productId);
+                const product = window.products.find((p) => p._id == productId);
+                console.log("Product found:", product);
+                if (product) {
+                   console.log("Product in modal:", product);
+                  document.getElementById("modal-product-name").textContent = product.name || "";
+                  document.getElementById("modal-product-description").textContent = product.description || "";
+                  document.getElementById("modal-product-price").textContent = product.price || "";
+                  document.getElementById("modal-product-total-return").textContent = product.totalReturn || "";
+                  document.getElementById("modal-product-daily-return").textContent = product.dailyReturn || "";
+                  document.getElementById("modal-product-duration").textContent = product.duration || "";
+                  const modal = document.getElementById("product-details-modal");
+                  if (modal) {
+                    modal.classList.remove("hidden");
+                    // Debug: Confirm modal is shown
+                    console.log("Modal shown");
+                  }
+                } else {
+                  console.log("No product found for this ID.");
+                }
+              }
+              if (e.target.id === "close-product-modal") {
+                const modal = document.getElementById("product-details-modal");
+                if (modal) {
+                  modal.classList.add("hidden");
+                  // Debug: Confirm modal is hidden
+                  console.log("Modal hidden");
+                }
+              }
+            });
+          });
+
+
+      document.body.addEventListener('click', function(e) {
+        console.log('Clicked:', e.target, 'Class:', e.target.className);
+      });
+    </script>
+
+    <script src="/main/script.js" defer></script>
+  </body>
 </html>

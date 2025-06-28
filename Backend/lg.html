@@ -288,6 +288,13 @@
       </div>
     </div>
 
+    <div id="toast" class="toast">
+      <div class="flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toast-message">Operation completed successfully!</span>
+      </div>
+    </div>
+
     <script>
       // Form switching
       const loginForm = document.getElementById("loginForm");
@@ -295,6 +302,18 @@
       const showSignup = document.getElementById("showSignup");
       const showLogin = document.getElementById("showLogin");
 
+      function showToast(message, isError = false) {
+        const toast = document.getElementById("toast");
+        const toastMessage = document.getElementById("toast-message");
+        if (!toast || !toastMessage) return;
+        toastMessage.textContent = message;
+        toast.style.backgroundColor = isError ? "#ef4444" : "#10b981";
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+          toast.style.backgroundColor = "";
+        }, 3000);
+      }
       showSignup.addEventListener("click", (e) => {
         e.preventDefault();
         loginForm.classList.add("hidden");
@@ -358,8 +377,9 @@
           );
           const result = await response.json();
           alert(
-            result.message ||
-              (response.ok ? "Signup successful!" : "Signup failed!")
+            showToast.message ||
+              (response.ok ? "Signup successful!" : "Signup failed!"),
+            !ressponse.ok
           );
         });
 

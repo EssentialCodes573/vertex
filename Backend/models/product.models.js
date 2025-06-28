@@ -15,7 +15,10 @@ const productSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    totalReturn: Number,      
+    dailyReturn: Number,      
+    duration: String
 });
 
 const Product = mongoose.model('Product', productSchema);
