@@ -319,11 +319,6 @@ body {
   color: var(--accent);
 }
 
-#products-section {
-  display: block !important;
-  opacity: 1 !important;
-  z-index: 99999 !important;
-}
 /* Product Details Modal Styling */
 #product-details-modal .modal-content,
 #product-details-modal > div {
