@@ -585,6 +585,11 @@
                     <option>Sterling Bank</option>
                     <option>Zenith Bank</option>
                     <option>GTBank</option>
+                    <option>PALMPAY</option>
+                    <option>Opay</option>
+                    <option>Kuda</option>
+                    <option>Moniepoint</option>
+                    <option>Carbon</option>
                   </select>
                   <div
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
@@ -804,14 +809,14 @@
                   <h3 class="text-lg font-semibold">Total Products</h3>
                   <i class="fas fa-chart-bar text-accent text-2xl"></i>
                 </div>
-                <p id="total-products" class="text-3xl font-bold">0</p>
+                <p id="total-products" class="text-3xl font-bold"><%= stats.totalProducts %></p>
               </div>
               <div class="my-product-card flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-2">
                   <h3 class="text-lg font-semibold">premium plans</h3>
                   <i class="fas fa-coins text-green-400 text-2xl"></i>
                 </div>
-                <p id="stable-products" class="text-3xl font-bold">0</p>
+                <p id="stable-products" class="text-3xl font-bold"><%= stats.stableProducts %></p>
               </div>
               <div class="my-product-card flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-2">
@@ -820,7 +825,7 @@
                     class="fas fa-hand-holding-heart text-blue-400 text-2xl"
                   ></i>
                 </div>
-                <p id="welfare-products" class="text-3xl font-bold">0</p>
+                <p id="welfare-products" class="text-3xl font-bold"><%= stats.welfareProducts %></p>
               </div>
               <div class="my-product-card flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-2">
@@ -829,21 +834,21 @@
                     class="fas fa-money-check-alt text-yellow-400 text-2xl"
                   ></i>
                 </div>
-                <p id="wages-products" class="text-3xl font-bold">0</p>
+                <p id="wages-products" class="text-3xl font-bold"><%= stats.wagesProducts %></p>
               </div>
               <div class="my-product-card flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-2">
                   <h3 class="text-lg font-semibold">Total Investment</h3>
                   <i class="fas fa-wallet text-purple-400 text-2xl"></i>
                 </div>
-                <p id="total-investment" class="text-3xl font-bold">₦0.00</p>
+                <p id="total-investment" class="text-3xl font-bold">₦<%= stats.totalInvestment.toLocaleString() %></p>
               </div>
               <div class="my-product-card flex flex-col justify-between">
                 <div class="flex justify-between items-center mb-2">
                   <h3 class="text-lg font-semibold">Total Returns</h3>
                   <i class="fas fa-chart-line text-teal-400 text-2xl"></i>
                 </div>
-                <p id="total-returns" class="text-3xl font-bold">₦0.00</p>
+                <p id="total-returns" class="text-3xl font-bold">₦<%= stats.totalReturns.toLocaleString() %></p>
               </div>
             </div>
 
@@ -871,18 +876,55 @@
               </div>
             </div>
 
-            <div class="card p-4 text-center">
-              <i class="fas fa-box-open text-4xl text-accent mb-4"></i>
-              <h3 class="text-lg font-semibold mb-2">No Active Investments</h3>
-              <p class="text-text-secondary mb-4">
-                You haven't purchased any investment products yet.
-              </p>
-              <button id="explore-products" class="submit-button">
-                Explore Products
-              </button>
-            </div>
-          </section>
+           <% if (transactions && transactions.length > 0) { %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+    <% transactions.forEach(function(purchase) { %>
+      <div class="my-product-card flex flex-col justify-between bg-[#23232a] rounded-lg shadow p-4 mb-2 border border-accent">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-lg font-bold text-accent"><%= purchase.product ? purchase.product.name : 'N/A' %></h3>
+            <span class="inline-block px-2 py-1 rounded text-xs font-semibold
+              <% if (purchase.status === 'Completed') { %> bg-green-100 text-green-600
+              <% } else if (purchase.status === 'Pending') { %> bg-yellow-100 text-yellow-700
+              <% } else { %> bg-blue-100 text-blue-700 <% } %>">
+              <%= purchase.status || 'Active' %>
+            </span>
+          </div>
+          <div class="text-text-secondary text-sm mb-1">
+            <i class="fas fa-calendar-alt mr-1"></i>
+            Purchased: <%= purchase.purchasedAt ? purchase.purchasedAt.toLocaleDateString() : 'N/A' %>
+          </div>
+          <div class="text-text-secondary text-sm mb-1">
+            <i class="fas fa-layer-group mr-1"></i>
+            Quantity: <%= purchase.quantity %>
+          </div>
         </div>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="font-bold text-lg text-green-400">
+            ₦<%= purchase.product ? (purchase.product.price * purchase.quantity).toLocaleString() : '0' %>
+          </span>
+          <% if (purchase.product && purchase.product.duration) { %>
+            <span class="text-xs text-text-secondary">
+              <i class="fas fa-clock mr-1"></i>
+              <%= purchase.product.duration %>
+            </span>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } else { %>
+  <div class="card p-4 text-center">
+    <i class="fas fa-box-open text-4xl text-accent mb-4"></i>
+    <h3 class="text-lg font-semibold mb-2">No Active Investments</h3>
+    <p class="text-text-secondary mb-4">
+      You haven't purchased any investment products yet.
+    </p>
+    <button id="explore-products" class="submit-button">
+      Explore Products
+    </button>
+  </div>
+<% } %>
 
         <!-- Invites Section -->
         <div id="invites-section" class="hidden">

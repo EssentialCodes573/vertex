@@ -137,6 +137,27 @@ app.get("/home", async (req, res) => {
   const products = await Product.find();
   console.log("[GET /home] products found:", products.length);
 
+  // Calculate stats (copy from your /dashboard route)
+  const stats = {
+    totalProducts: purchases.length,
+    stableProducts: purchases.filter(
+      (p) => p.product.category === "premium" || p.product.category === "stable"
+    ).length,
+    welfareProducts: purchases.filter(
+      (p) => p.product.category === "alpha" || p.product.category === "welfare"
+    ).length,
+    wagesProducts: purchases.filter((p) => p.product.category === "wages")
+      .length,
+    totalInvestment: purchases.reduce(
+      (sum, p) => sum + p.product.price * p.quantity,
+      0
+    ),
+    totalReturns: purchases.reduce(
+      (sum, p) => sum + p.product.totalReturn * p.quantity,
+      0
+    ),
+  };
+
   let credited = false;
   const now = new Date();
 
@@ -173,6 +194,7 @@ app.get("/home", async (req, res) => {
     balance,
     transactions: purchases,
     referralCount,
+    stats,
   });
   console.log("[GET /home] Home page rendered successfully");
 });
@@ -332,6 +354,67 @@ app.get("/admin/users/:id", adminOnly, async (req, res) => {
   } catch (err) {
     res.status(500).send("Error loading user profile");
   }
+});
+
+// products
+// app.get('/dashboard', async (req, res) => {
+//   const user = await User.findById(req.user._id).populate('purchases');
+//   // Calculate stats
+//   const totalProducts = user.purchases.length;
+//   const stableProducts = user.purchases.filter(p => p.category === 'stable').length;
+//   const welfareProducts = user.purchases.filter(p => p.category === 'welfare').length;
+//   const wagesProducts = user.purchases.filter(p => p.category === 'wages').length;
+//   const totalInvestment = user.purchases.reduce((sum, p) => sum + p.amount, 0);
+//   const totalReturns = user.purchases.reduce((sum, p) => sum + p.returns, 0);
+
+//   res.render('main/vertex', {
+//     user,
+//     stats: {
+//       totalProducts,
+//       stableProducts,
+//       welfareProducts,
+//       wagesProducts,
+//       totalInvestment,
+//       totalReturns
+//     }
+//   });
+// });
+
+app.get("/dashboard", async (req, res) => {
+  // Fetch user and their purchases
+  const user = await User.findById(req.user._id).populate("purchases.product");
+  const purchases = user.purchases || [];
+
+  // Calculate stats
+  const stats = {
+    totalProducts: purchases.length,
+    stableProducts: purchases.filter(
+      (p) => p.product.category === "premium" || p.product.category === "stable"
+    ).length,
+    welfareProducts: purchases.filter(
+      (p) => p.product.category === "alpha" || p.product.category === "welfare"
+    ).length,
+    wagesProducts: purchases.filter((p) => p.product.category === "wages")
+      .length,
+    totalInvestment: purchases.reduce(
+      (sum, p) => sum + p.product.price * p.quantity,
+      0
+    ),
+    totalReturns: purchases.reduce(
+      (sum, p) => sum + p.product.totalReturn * p.quantity,
+      0
+    ),
+  };
+
+  // Render EJS and pass stats
+  res.render("main/vertex", {
+    user,
+    products: await Product.find({}), // or however you get products
+    transactions: purchases,
+    stats, // <-- pass stats here
+    referralCount: user.referrals ? user.referrals.length : 0,
+    balance: user.balance || 0,
+  });
 });
 
 // logout

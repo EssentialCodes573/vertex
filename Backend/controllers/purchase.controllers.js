@@ -29,7 +29,12 @@ exports.createPurchase = async (req, res) => {
     console.log("Total price:", totalPrice);
 
     if (user.balance < totalPrice) {
-      console.log("Insufficient balance. User balance:", user.balance, "Total price:", totalPrice);
+      console.log(
+        "Insufficient balance. User balance:",
+        user.balance,
+        "Total price:",
+        totalPrice
+      );
       return res.status(400).json({ message: "Insufficient balance" });
     }
 
@@ -45,6 +50,27 @@ exports.createPurchase = async (req, res) => {
     await purchase.save();
     console.log("Purchase saved:", purchase);
 
+    const isFirstPurchase =
+      (await Purchase.countDocuments({ user: user._id })) === 0;
+    // award referral bonus if it's the user's first purchase
+    if (user.referredBy && isFirstPurchase) {
+      const referrer = await User.findOne({ referralCode: user.referredBy });
+      if (referrer) {
+        const bonus = Math.floor(product.price * 0.25); // 25% bonus
+        referrer.bonus = (referrer.bonus || 0) + bonus;
+        await referrer.save();
+
+        // Optionally, notify the referrer
+        await Notification.create({
+          type: "referral",
+          message: `You earned a ₦${bonus} bonus from your referral's first purchase!`,
+          user: referrer._id,
+        });
+        console.log(
+          `Referral bonus of ₦${bonus} credited to referrer ${referrer._id}`
+        );
+      }
+    }
     await Notification.create({
       type: "payment",
       message: `Incoming payment of ₦${totalPrice}`,
