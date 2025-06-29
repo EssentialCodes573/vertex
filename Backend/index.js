@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const cors = require("cors");
+// const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
 const dotenv = require("dotenv");
@@ -33,27 +33,47 @@ const notificationRoutes = require("./routes/notifications.routes");
 const adminRoutes = require("./routes/admin.routes");
 const Product = require("./models/product.models");
 // const products = require("./seed_products");
-const allowedOrigins = [
-  "https://vertex-4.onrender.com", // Your Render frontend domain
-  "http://localhost:3000"          // For local development
-];
+// const allowedOrigins = [
+//   "https://vertex-4.onrender.com", // Your Render frontend domain
+//   "http://localhost:3000", // For local development
+// ];
 
 // Middleware
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
+const isProduction = process.env.NODE_ENV === "production";
+// const allowedOrigins = [
+//   "https://vertex-4.onrender.com",
+//   "http://localhost:3000",
+// ];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       console.log("CORS request from origin:", origin);
+//       // Allow requests with no origin (like mobile apps, curl, Postman)
+//       if (!origin) {
+//         console.log("CORS: No origin, allowing request.");
+//         return callback(null, true);
+//       }
+//       if (allowedOrigins.includes(origin)) {
+//         console.log("CORS: Origin allowed:", origin);
+//         return callback(null, true);
+//       } else {
+//         console.warn("CORS: Origin NOT allowed:", origin);
+//         return callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//     methods: ["GET", "POST"],
+//   })
+// );
 
 // View engine setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Session setup
 app.use(
@@ -61,7 +81,10 @@ app.use(
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: {
+      secure: false, // true in production (HTTPS), false in dev
+      sameSite: "lax", // "none" for cross-site cookies in prod, "lax" for dev
+    },
   })
 );
 
@@ -213,10 +236,13 @@ app.post("/api/auth/login", async (req, res) => {
       return res.json({ message: "Login successful!", redirect: "/home" });
     });
   } else {
-    console.log("[POST /api/auth/login] Invalid credentials");
+    // ADD THIS:
+    return res.status(401).json({ message: "Invalid credentials" });
   }
 });
-
+app.get("/test-session", (req, res) => {
+  res.json({ username: req.session.username });
+});
 // user profile
 app.get("/profile", async (req, res) => {
   if (!req.session.username) return res.redirect("/login");
@@ -337,7 +363,7 @@ app.post("/deposit", async (req, res) => {
 
   // Referral bonus logic
   if (user.referredBy) {
-   const referrer = await User.findOne({ username: user.referredBy });
+    const referrer = await User.findOne({ username: user.referredBy });
     if (referrer) {
       const bonus = amount * 0.25;
       referrer.bonus = (referrer.bonus || 0) + bonus;

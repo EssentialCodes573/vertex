@@ -398,15 +398,12 @@
           });
           console.log(data);
 
-          const response = await fetch(
-            "http://localhost:3000/api/auth/signup",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data),
-              credentials: "include", // Include cookies for session management
-            }
-          );
+          const response = await fetch("/api/auth/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+            credentials: "include",
+          });
           const result = await response.json();
           showToast(
             result.message ||
@@ -423,7 +420,7 @@
           const formData = new FormData(this);
           const data = Object.fromEntries(formData.entries());
 
-          const response = await fetch("http://localhost:3000/api/auth/login", {
+          const response = await fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -432,10 +429,9 @@
           const result = await response.json();
 
           if (response.ok) {
-            // Redirect to /home after successful login
             window.location.href = "/home";
           } else {
-           showToast(result.message || "Login failed!");
+            showToast(result.message || "Login failed!");
           }
         });
     </script>
