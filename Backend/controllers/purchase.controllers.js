@@ -50,33 +50,20 @@ exports.createPurchase = async (req, res) => {
     await purchase.save();
     console.log("Purchase saved:", purchase);
 
-    const isFirstPurchase =
-      (await Purchase.countDocuments({ user: user._id })) === 0;
-    // award referral bonus if it's the user's first purchase
-    if (user.referredBy && isFirstPurchase) {
-      const referrer = await User.findOne({ referralCode: user.referredBy });
-      if (referrer) {
-        const bonus = Math.floor(product.price * 0.25); // 25% bonus
-        referrer.bonus = (referrer.bonus || 0) + bonus;
-        await referrer.save();
+   const isFirstPurchase = (await Purchase.countDocuments({ user: user._id })) === 1;
+console.log("User referredBy:", user.referredBy);
+console.log("isFirstPurchase:", isFirstPurchase);
 
-        // Optionally, notify the referrer
-        await Notification.create({
-          type: "referral",
-          message: `You earned a ₦${bonus} bonus from your referral's first purchase!`,
-          user: referrer._id,
-        });
-        console.log(
-          `Referral bonus of ₦${bonus} credited to referrer ${referrer._id}`
-        );
-      }
-    }
-    await Notification.create({
-      type: "payment",
-      message: `Incoming payment of ₦${totalPrice}`,
-    });
-    console.log("Notification created for payment of ₦" + totalPrice);
-
+if (user.referredBy && isFirstPurchase) {
+  const referrer = await User.findById(user.referredBy);
+  console.log("Referrer found:", referrer);
+  if (referrer) {
+    const bonus = Math.floor(product.price * 0.25);
+    referrer.bonus = (referrer.bonus || 0) + bonus;
+    await referrer.save();
+    console.log("Referrer bonus after save:", referrer.bonus);
+  }
+}
     res.status(201).json({
       message: "Purchase successful",
       purchase,
