@@ -21,6 +21,38 @@
         min-height: 100vh;
         overflow: hidden;
       }
+      /* Hide toast by default */
+      .toast {
+        display: none;
+        position: fixed;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 250px;
+        background: #222;
+        color: #fff;
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        font-size: 1rem;
+        transition: opacity 0.3s;
+      }
+
+      /* Show toast when .show is added */
+      .toast.show {
+        display: block;
+        opacity: 1;
+      }
+
+      .toast {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
 
       .container {
         position: relative;
@@ -376,10 +408,10 @@
             }
           );
           const result = await response.json();
-          alert(
-            showToast.message ||
+          showToast(
+            result.message ||
               (response.ok ? "Signup successful!" : "Signup failed!"),
-            !ressponse.ok
+            !response.ok
           );
         });
 
@@ -403,7 +435,7 @@
             // Redirect to /home after successful login
             window.location.href = "/home";
           } else {
-            alert(result.message || "Login failed!");
+           showToast(result.message || "Login failed!");
           }
         });
     </script>
