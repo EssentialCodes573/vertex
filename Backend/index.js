@@ -33,6 +33,10 @@ const notificationRoutes = require("./routes/notifications.routes");
 const adminRoutes = require("./routes/admin.routes");
 const Product = require("./models/product.models");
 // const products = require("./seed_products");
+const allowedOrigins = [
+  "https://vertex-4.onrender.com", // Your Render frontend domain
+  "http://localhost:3000"          // For local development
+];
 
 // Middleware
 app.use(cors());
@@ -40,7 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   })
