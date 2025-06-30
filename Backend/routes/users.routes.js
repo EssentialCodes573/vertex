@@ -5,7 +5,7 @@ const User = require("../models/users.models");
 const Referral = require("../models/referral.models");
 
 // router.post('/signup', authController.signup);
-router.post("/login", authController.login);
+// router.post("/login", authController.login);
 
 router.post("/signup", async (req, res) => {
   const {

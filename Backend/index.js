@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const validator = require('validator');
+const validator = require("validator");
 const nodemailer = require("nodemailer");
 const axios = require("axios");
 const path = require("path");
@@ -35,12 +35,10 @@ const notificationRoutes = require("./routes/notifications.routes");
 const adminRoutes = require("./routes/admin.routes");
 const Product = require("./models/product.models");
 
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const isProduction = process.env.NODE_ENV === "production";
-
 
 // View engine setup
 app.set("view engine", "ejs");
@@ -257,13 +255,13 @@ app.get("/profile", async (req, res) => {
 });
 
 // Serve reset password form
-app.get("/forgot-password", async (req, res) => {
+app.get("/reset-password", async (req, res) => {
   const { token, email } = req.query;
   res.render("land/reset-password", { token, email }); // Create this EJS file
 });
 
 // Handle new password submission
-app.post("/forgot-password", async (req, res) => {
+app.post("/api/auth/reset-password", async (req, res) => {
   const { email } = req.body;
 
   if (!email || !validator.isEmail(email)) {
