@@ -615,6 +615,7 @@
       };
 
       // handle forgot password form submission
+      // ...existing code...
       document
         .getElementById("forgotPasswordForm")
         .addEventListener("submit", async function (e) {
@@ -625,7 +626,7 @@
           console.log("Forgot password form data:", data); // Log data
 
           try {
-            const response = await fetch("/api/auth/forgot-password-reset", {
+            const response = await fetch("/api/auth/reset-password-request", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(data),
