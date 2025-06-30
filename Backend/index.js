@@ -557,7 +557,7 @@ app.use("/api/auth", authRoutes);
 
 // Start server
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server Started at http://localhost:${PORT}`);
   });
 });
