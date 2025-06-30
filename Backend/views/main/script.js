@@ -51,9 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
       list.innerHTML += `
             <div class="card p-4 flex justify-between items-center">
                 <div>
-                    <div class="font-semibold">${
-                      product.name || "Product"
-                    }</div>
+                    <div class="font-semibold">${product.name || "Product"
+        }</div>
                     <div class="text-sm text-text-secondary">${date}</div>
                 </div>
                 <div class="font-bold text-green-500">
@@ -195,13 +194,12 @@ document.addEventListener("DOMContentLoaded", function () {
           .map(
             (n) =>
               `<div class="px-4 py-2 border-b text-sm">
-            <span class="font-semibold">${
-              n.type === "payment" ? "Payment" : "New User"
-            }:</span>
+            <span class="font-semibold">${n.type === "payment" ? "Payment" : "New User"
+              }:</span>
             ${n.message}
             <span class="block text-xs text-gray-400">${new Date(
-              n.date
-            ).toLocaleString()}</span>
+                n.date
+              ).toLocaleString()}</span>
           </div>`
           )
           .join("");
@@ -298,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const referralLink = getElement("referral-link", false);
       if (referralLink) {
-        referralLink.textContent = `https://wealth-wave-investment.int.ng/ref/${state.referralCode}`;
+        referralLink.textContent = `https://wealth-wave-investment.int.ng/ref/${state.username}`;
       }
     }, "UI update");
   }
@@ -325,12 +323,10 @@ document.addEventListener("DOMContentLoaded", function () {
             </svg>
           </div>
           <div>
-            <h3 class="text-lg font-semibold text-gray-200">${
-              product.name || "No Name"
-            }</h3>
-            <p class="text-sm text-gray-400">Duration <span class="text-green-400">${
-              product.duration || ""
-            }</span></p>
+            <h3 class="text-lg font-semibold text-gray-200">${product.name || "No Name"
+      }</h3>
+            <p class="text-sm text-gray-400">Duration <span class="text-green-400">${product.duration || ""
+      }</span></p>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2 mb-4">
@@ -346,12 +342,10 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         </div>
         <div class="flex">
-          <button class="details-btn flex-1 bg-[#3b3b3b] text-white py-2 px-4 rounded-md mr-2" data-product-id="${
-            product._id
-          }">Details</button>
-          <button class="flex-1 bg-green-500 text-white py-2 px-4 rounded-md buy-product" data-id="${
-            product._id
-          }">
+          <button class="details-btn flex-1 bg-[#3b3b3b] text-white py-2 px-4 rounded-md mr-2" data-product-id="${product._id
+      }">Details</button>
+          <button class="flex-1 bg-green-500 text-white py-2 px-4 rounded-md buy-product" data-id="${product._id
+      }">
             Buy ₦${price.toLocaleString()}
           </button>
         </div>
