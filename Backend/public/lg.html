@@ -214,6 +214,21 @@
         transform: translateY(-5px) scale(1.1);
       }
 
+      /* password toggle icon */
+      .toggle-password {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 18px;
+        color: #b388ff;
+        user-select: none;
+      }
+      .toggle-password:hover {
+        color: #6a00ff;
+      }
+
       /* Form switching animation */
       .form {
         transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -254,6 +269,23 @@
           opacity: 0;
         }
       }
+
+      .loader {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 3px solid #fff;
+        border-top: 3px solid #6a00ff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        vertical-align: middle;
+        margin-left: 10px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
     </style>
   </head>
 
@@ -269,11 +301,22 @@
             <input type="text" name="username" required />
             <label>Username</label>
           </div>
-          <div class="input-group">
-            <input type="password" name="password" required />
+          <div class="input-group" style="position: relative">
+            <input
+              type="password"
+              name="password"
+              id="loginPassword"
+              required
+            />
             <label>Password</label>
+            <span class="toggle-password" data-target="loginPassword"
+              >&#128065;</span
+            >
           </div>
-          <button type="submit" class="btn">Login</button>
+          <button type="submit" class="btn" id="loginBtn">
+            <span class="btn-text">Login</span>
+            <span class="loader" style="display: none"></span>
+          </button>
           <div class="toggle-form">
             Don't have an account? <a href="#" id="showSignup">Sign up</a>
           </div>
@@ -308,11 +351,22 @@
             <input type="tel" name="mobilenumber" required />
             <label>Mobile Number</label>
           </div>
-          <div class="input-group">
-            <input type="password" name="password" required />
+          <div class="input-group" style="position: relative">
+            <input
+              type="password"
+              name="password"
+              id="signupPassword"
+              required
+            />
             <label>Password</label>
+            <span class="toggle-password" data-target="signupPassword"
+              >&#128065;</span
+            >
           </div>
-          <button type="submit" class="btn">Sign Up</button>
+          <button type="submit" class="btn" id="signupBtn">
+            <span class="btn-text">Sign Up</span>
+            <span class="loader" style="display: none"></span>
+          </button>
           <div class="toggle-form">
             Already have an account? <a href="#" id="showLogin">Login</a>
           </div>
@@ -320,7 +374,7 @@
       </div>
     </div>
 
-    <div id="toast" class="toast">
+    <div id="toast" class="toast" aria-live="polite">
       <div class="flex items-center">
         <i class="fas fa-check-circle mr-2"></i>
         <span id="toast-message">Operation completed successfully!</span>
@@ -386,37 +440,63 @@
       }
 
       // Handling the sign up
+      // Signup
       document
         .getElementById("signupForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
+          const btn = document.getElementById("signupBtn");
+          const btnText = btn.querySelector(".btn-text");
+          const loader = btn.querySelector(".loader");
+          btn.disabled = true;
+          btnText.style.display = "none";
+          loader.style.display = "inline-block";
+
           const formData = new FormData(this);
           const data = Object.fromEntries(formData.entries());
-          // Remove empty fields if any
           Object.keys(data).forEach((key) => {
             if (!data[key]) delete data[key];
           });
-          console.log(data);
 
-          const response = await fetch("/api/auth/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-            credentials: "include",
-          });
-          const result = await response.json();
-          showToast(
-            result.message ||
-              (response.ok ? "Signup successful!" : "Signup failed!"),
-            !response.ok
-          );
+          try {
+            const response = await fetch("/api/auth/signup", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+              credentials: "include",
+            });
+            const result = await response.json();
+            if (response.ok) {
+              showToast("Signup successful!");
+              this.reset();
+              setTimeout(() => {
+                signupForm.classList.add("hidden");
+                loginForm.classList.remove("hidden");
+              }, 1500);
+            } else {
+              showToast(result.message || "Signup failed!", true);
+            }
+          } catch (err) {
+            showToast("Network error. Please try again.", true);
+          }
+
+          btn.disabled = false;
+          btnText.style.display = "inline";
+          loader.style.display = "none";
         });
 
-      // Handlig the Login
+      // Login
       document
         .getElementById("loginForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
+          const btn = document.getElementById("loginBtn");
+          const btnText = btn.querySelector(".btn-text");
+          const loader = btn.querySelector(".loader");
+          btn.disabled = true;
+          btnText.style.display = "none";
+          loader.style.display = "inline-block";
+
           const formData = new FormData(this);
           const data = Object.fromEntries(formData.entries());
 
@@ -428,12 +508,30 @@
           });
           const result = await response.json();
 
+          btn.disabled = false;
+          btnText.style.display = "inline";
+          loader.style.display = "none";
+
           if (response.ok) {
             window.location.href = "/home";
           } else {
             showToast(result.message || "Login failed!");
           }
         });
+
+      document.querySelectorAll(".toggle-password").forEach(function (toggle) {
+        toggle.addEventListener("click", function () {
+          const targetId = this.getAttribute("data-target");
+          const input = document.getElementById(targetId);
+          if (input.type === "password") {
+            input.type = "text";
+            this.textContent = "🙈"; // Change icon if you want
+          } else {
+            input.type = "password";
+            this.textContent = "👁️"; // Change icon if you want
+          }
+        });
+      });
     </script>
   </body>
 </html>
