@@ -4,6 +4,7 @@ const validator = require("validator");
 const nodemailer = require("nodemailer");
 const axios = require("axios");
 const path = require("path");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const multer = require("multer");
 const crypto = require("crypto");
@@ -38,7 +39,17 @@ const Product = require("./models/product.models");
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const isProduction = process.env.NODE_ENV === "production";
+const allowedOrigin =
+  process.env.NODE_ENV === "production"
+    ? "https://vertex-4.onrender.com" // <-- set your real domain here
+    : "*";
+
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true,
+  })
+);
 
 // View engine setup
 app.set("view engine", "ejs");
