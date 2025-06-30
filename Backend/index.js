@@ -255,13 +255,13 @@ app.get("/profile", async (req, res) => {
 });
 
 // Serve reset password form
-app.get("/reset-password", async (req, res) => {
+app.get("/reset-password-request", async (req, res) => {
   const { token, email } = req.query;
   res.render("land/reset-password", { token, email }); // Create this EJS file
 });
 
 // Handle new password submission
-app.post("/api/auth/reset-password", async (req, res) => {
+app.post("/api/auth/reset-password-request", async (req, res) => {
   const { email } = req.body;
 
   if (!email || !validator.isEmail(email)) {
@@ -280,7 +280,7 @@ app.post("/api/auth/reset-password", async (req, res) => {
   await user.save();
 
   // Build the reset URL
-  const resetUrl = `https://vertex-4.onrender.com/reset-password?token=${token}&email=${encodeURIComponent(
+  const resetUrl = `https://vertex-4.onrender.com/reset-password-request?token=${token}&email=${encodeURIComponent(
     email
   )}`;
 
@@ -310,6 +310,32 @@ app.post("/api/auth/reset-password", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Failed to send email." });
   }
+});
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  const { email, token, newPassword } = req.body;
+
+  if (!email || !validator.isEmail(email)) {
+    return res.status(400).json({ message: "Valid email required" });
+  }
+  if (!token || !newPassword) {
+    return res.status(400).json({ message: "Token and new password required" });
+  }
+
+  const user = await User.findOne({ email, resetToken: token });
+  if (!user) {
+    return res.status(400).json({ message: "Invalid token or email." });
+  }
+  if (user.resetTokenExpiry < Date.now()) {
+    return res.status(400).json({ message: "Reset token expired." });
+  }
+
+  user.password = newPassword; // Make sure your User model hashes passwords!
+  user.resetToken = undefined;
+  user.resetTokenExpiry = undefined;
+  await user.save();
+
+  res.json({ message: "Password reset successful. You can now log in." });
 });
 
 // profile image upload
