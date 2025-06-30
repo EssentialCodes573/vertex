@@ -443,6 +443,9 @@
         toastMessage.textContent = message;
         toast.style.backgroundColor = isError ? "#ef4444" : "#10b981";
         toast.classList.add("show");
+
+        console.log(`Toast (${isError ? "ERROR" : "SUCCESS"}): ${message}`);
+
         setTimeout(() => {
           toast.classList.remove("show");
           toast.style.backgroundColor = "";
@@ -506,6 +509,8 @@
             if (!data[key]) delete data[key];
           });
 
+          console.log("Signup form data:", data); // Log the data being sent
+
           try {
             const response = await fetch("/api/auth/signup", {
               method: "POST",
@@ -514,6 +519,10 @@
               credentials: "include",
             });
             const result = await response.json();
+
+            console.log("Signup API response status:", response.status); // Log HTTP status
+            console.log("Signup API response data:", result); // Log the full response body
+
             if (response.ok) {
               showToast("Signup successful!");
               this.reset();
@@ -525,12 +534,14 @@
               showToast(result.message || "Signup failed!", true);
             }
           } catch (err) {
+            console.error("Signup network error:", err); // Use console.error for errors
             showToast("Network error. Please try again.", true);
+          } finally {
+            // Use finally to ensure button state is reset regardless of success/fail
+            btn.disabled = false;
+            btnText.style.display = "inline";
+            loader.style.display = "none";
           }
-
-          btn.disabled = false;
-          btnText.style.display = "inline";
-          loader.style.display = "none";
         });
 
       // Login
@@ -548,25 +559,37 @@
           const formData = new FormData(this);
           const data = Object.fromEntries(formData.entries());
 
-          const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-            credentials: "include",
-          });
-          const result = await response.json();
+          console.log("Login form data:", data); // Log data being sent
 
-          btn.disabled = false;
-          btnText.style.display = "inline";
-          loader.style.display = "none";
+          try {
+            // Add try-catch for network errors
+            const response = await fetch("/api/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+              credentials: "include",
+            });
+            const result = await response.json();
 
-          if (response.ok) {
-            window.location.href = "/home";
-          } else {
-            showToast(result.message || "Login failed!");
+            console.log("Login API response status:", response.status);
+            console.log("Login API response data:", result);
+
+            if (response.ok) {
+              window.location.href = "/home";
+            } else {
+              showToast(result.message || "Login failed!", true); // Pass true for error toast
+            }
+          } catch (err) {
+            console.error("Login network error:", err);
+            showToast("Network error. Please try again.", true);
+          } finally {
+            btn.disabled = false;
+            btnText.style.display = "inline";
+            loader.style.display = "none";
           }
         });
 
+      // Toggle password visibility
       document.querySelectorAll(".toggle-password").forEach(function (toggle) {
         toggle.addEventListener("click", function () {
           const targetId = this.getAttribute("data-target");
@@ -598,6 +621,9 @@
           e.preventDefault();
           const formData = new FormData(this);
           const data = Object.fromEntries(formData.entries());
+
+          console.log("Forgot password form data:", data); // Log data
+
           try {
             const response = await fetch("/api/auth/forgot-password", {
               method: "POST",
@@ -605,18 +631,26 @@
               body: JSON.stringify(data),
             });
             const result = await response.json();
+
+            console.log(
+              "Forgot password API response status:",
+              response.status
+            );
+            console.log("Forgot password API response data:", result);
+
             showToast(
               result.message ||
                 (response.ok
                   ? "Check your email for reset instructions."
                   : "Request failed!"),
-              !response.ok
+              !response.ok // Pass true if response is NOT ok (i.e., an error)
             );
             if (response.ok) {
               document.getElementById("forgotPasswordModal").style.display =
                 "none";
             }
           } catch (err) {
+            console.error("Forgot password network error:", err);
             showToast("Network error. Please try again.", true);
           }
         });

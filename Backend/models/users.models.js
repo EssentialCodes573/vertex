@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     firstname: { type: String, required: true, unique: true },
     lastname: { type: String, required: true, unique: true },
-    username: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true, index: true },
     banks: [
     {
       bankName: String,
@@ -12,14 +12,14 @@ const userSchema = new mongoose.Schema({
       accountName: String
     }
   ],
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true, index: true},
     mobilenumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    balance: { type: Number, default: 0 },
+    balance: { type: Number, default: 0, index: true },
     bonus: { type: Number, default: 0 },
     profileImage: { type: String, default: "" },
     isAdmin: { type: Boolean, default: false },
-    referredBy: { type: String, default: null }
+    referredBy: { type: String, default: null, index: true },
 });
 
 // Hash password before saving

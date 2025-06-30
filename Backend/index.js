@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-// const cors = require("cors");
+const validator = require('validator');
 const nodemailer = require("nodemailer");
 const axios = require("axios");
 const path = require("path");
@@ -34,42 +34,13 @@ const bankRoutes = require("./routes/bank.routes");
 const notificationRoutes = require("./routes/notifications.routes");
 const adminRoutes = require("./routes/admin.routes");
 const Product = require("./models/product.models");
-// const products = require("./seed_products");
-// const allowedOrigins = [
-//   "https://vertex-4.onrender.com", // Your Render frontend domain
-//   "http://localhost:3000", // For local development
-// ];
+
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const isProduction = process.env.NODE_ENV === "production";
-// const allowedOrigins = [
-//   "https://vertex-4.onrender.com",
-//   "http://localhost:3000",
-// ];
 
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       console.log("CORS request from origin:", origin);
-//       // Allow requests with no origin (like mobile apps, curl, Postman)
-//       if (!origin) {
-//         console.log("CORS: No origin, allowing request.");
-//         return callback(null, true);
-//       }
-//       if (allowedOrigins.includes(origin)) {
-//         console.log("CORS: Origin allowed:", origin);
-//         return callback(null, true);
-//       } else {
-//         console.warn("CORS: Origin NOT allowed:", origin);
-//         return callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//     methods: ["GET", "POST"],
-//   })
-// );
 
 // View engine setup
 app.set("view engine", "ejs");
@@ -294,6 +265,11 @@ app.get("/forgot-password", async (req, res) => {
 // Handle new password submission
 app.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
+
+  if (!email || !validator.isEmail(email)) {
+    return res.status(400).json({ message: "Valid email required" });
+  }
+
   const user = await User.findOne({ email });
   if (!user)
     return res.status(404).json({ message: "No user with that email." });
@@ -411,30 +387,6 @@ app.get("/admin/users/:id", adminOnly, async (req, res) => {
   }
 });
 
-// products
-// app.get('/dashboard', async (req, res) => {
-//   const user = await User.findById(req.user._id).populate('purchases');
-//   // Calculate stats
-//   const totalProducts = user.purchases.length;
-//   const stableProducts = user.purchases.filter(p => p.category === 'stable').length;
-//   const welfareProducts = user.purchases.filter(p => p.category === 'welfare').length;
-//   const wagesProducts = user.purchases.filter(p => p.category === 'wages').length;
-//   const totalInvestment = user.purchases.reduce((sum, p) => sum + p.amount, 0);
-//   const totalReturns = user.purchases.reduce((sum, p) => sum + p.returns, 0);
-
-//   res.render('main/vertex', {
-//     user,
-//     stats: {
-//       totalProducts,
-//       stableProducts,
-//       welfareProducts,
-//       wagesProducts,
-//       totalInvestment,
-//       totalReturns
-//     }
-//   });
-// });
-
 app.get("/dashboard", async (req, res) => {
   // Fetch user and their purchases
   const user = await User.findById(req.user._id).populate("purchases.product");
@@ -511,6 +463,17 @@ app.post("/deposit", async (req, res) => {
   }
 
   res.json({ success: true });
+});
+
+// global error handler
+app.use((err, req, res, next) => {
+  console.error("Global error:", err.stack);
+
+  if (isProduction) {
+    res.status(500).json({ message: "Something went wrong!" });
+  } else {
+    res.status(500).json({ message: err.message, stack: err.stack });
+  }
 });
 
 // Deposit request API
