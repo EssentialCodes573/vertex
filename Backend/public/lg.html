@@ -313,6 +313,11 @@
               >&#128065;</span
             >
           </div>
+          <div style="text-align: right; margin-bottom: 10px">
+            <a href="#" id="forgotPasswordLink" style="color: #b388ff"
+              >Forgot Password?</a
+            >
+          </div>
           <button type="submit" class="btn" id="loginBtn">
             <span class="btn-text">Login</span>
             <span class="loader" style="display: none"></span>
@@ -321,6 +326,49 @@
             Don't have an account? <a href="#" id="showSignup">Sign up</a>
           </div>
         </form>
+
+        <!-- modal for user to enter their email for forgotten password -->
+        <div
+          id="forgotPasswordModal"
+          style="
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div
+            style="
+              background: #222;
+              padding: 30px 20px;
+              border-radius: 10px;
+              max-width: 350px;
+              margin: auto;
+            "
+          >
+            <h3 style="color: #6a00ff; text-align: center">Reset Password</h3>
+            <form id="forgotPasswordForm">
+              <div class="input-group">
+                <input type="email" name="email" required />
+                <label>Email Address</label>
+              </div>
+              <button type="submit" class="btn" style="width: 100%">
+                Send Reset Link
+              </button>
+              <div style="text-align: center; margin-top: 10px">
+                <a href="#" id="closeForgotModal" style="color: #b388ff"
+                  >Cancel</a
+                >
+              </div>
+            </form>
+          </div>
+        </div>
 
         <!-- Signup Form -->
         <form class="form hidden" id="signupForm">
@@ -532,6 +580,46 @@
           }
         });
       });
+
+      // Handling forgot password modal
+      document.getElementById("forgotPasswordLink").onclick = function (e) {
+        e.preventDefault();
+        document.getElementById("forgotPasswordModal").style.display = "flex";
+      };
+      document.getElementById("closeForgotModal").onclick = function (e) {
+        e.preventDefault();
+        document.getElementById("forgotPasswordModal").style.display = "none";
+      };
+
+      // handle forgot password form submission
+      document
+        .getElementById("forgotPasswordForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          const data = Object.fromEntries(formData.entries());
+          try {
+            const response = await fetch("/api/auth/forgot-password", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const result = await response.json();
+            showToast(
+              result.message ||
+                (response.ok
+                  ? "Check your email for reset instructions."
+                  : "Request failed!"),
+              !response.ok
+            );
+            if (response.ok) {
+              document.getElementById("forgotPasswordModal").style.display =
+                "none";
+            }
+          } catch (err) {
+            showToast("Network error. Please try again.", true);
+          }
+        });
     </script>
   </body>
 </html>

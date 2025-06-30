@@ -1,10 +1,12 @@
 const express = require("express");
 const session = require("express-session");
 // const cors = require("cors");
+const nodemailer = require("nodemailer");
 const axios = require("axios");
 const path = require("path");
 const dotenv = require("dotenv");
 const multer = require("multer");
+const crypto = require("crypto");
 const app = express();
 const PORT = 3000;
 
@@ -281,6 +283,59 @@ app.get("/profile", async (req, res) => {
     purchases,
     referrals,
   });
+});
+
+// Serve reset password form
+app.get("/forgot-password", async (req, res) => {
+  const { token, email } = req.query;
+  res.render("land/reset-password", { token, email }); // Create this EJS file
+});
+
+// Handle new password submission
+app.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user)
+    return res.status(404).json({ message: "No user with that email." });
+
+  // Generate a reset token and expiry
+
+  const token = crypto.randomBytes(32).toString("hex");
+  user.resetToken = token;
+  user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
+  await user.save();
+
+  // Build the reset URL
+  const resetUrl = `https://vertex-4.onrender.com/reset-password?token=${token}&email=${encodeURIComponent(
+    email
+  )}`;
+
+  // Configure transporter
+  const transporter = nodemailer.createTransport({
+    service: "gmail", // or your provider
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Password Reset Request",
+    html: `
+      <p>You requested a password reset.</p>
+      <p>Click <a href="${resetUrl}">here</a> to reset your password.</p>
+      <p>If you did not request this, please ignore this email.</p>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Password reset link sent to your email." });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to send email." });
+  }
 });
 
 // profile image upload
