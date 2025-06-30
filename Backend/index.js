@@ -319,6 +319,7 @@ app.post("/api/auth/reset-password-request", async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.json({ message: "Password reset link sent to your email." });
   } catch (err) {
+    console.log("Failed to send email:", err);
     res.status(500).json({ message: "Failed to send email." });
   }
 });
